@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/wormwlrm/konva-image-editor/issues"
   },
-  "homepage": "https://github.com/wormwlrm/konva-image-editor#readme"
+  "homepage": "https://github.com/wormwlrm/konva-image-editor#readme",
+  "devDependencies": {
+    "@babel/core": "^7.15.8",
+    "babel-preset-react-app": "^10.0.0"
+  }
 }
