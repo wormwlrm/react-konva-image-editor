@@ -6,10 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/wormwlrm/konva-image-editor.git"
-  },
+  "repository": "git+https://github.com/wormwlrm/konva-image-editor.git",
   "author": "wormwlrm",
   "license": "MIT",
   "bugs": {
@@ -18,6 +15,13 @@
   "homepage": "https://github.com/wormwlrm/konva-image-editor#readme",
   "devDependencies": {
     "@babel/core": "^7.15.8",
-    "babel-preset-react-app": "^10.0.0"
+    "@rollup/plugin-commonjs": "^21.0.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.0.5",
+    "babel-preset-react-app": "^10.0.0",
+    "rollup": "^2.58.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-postcss": "^4.0.1",
+    "rollup-plugin-typescript2": "^0.30.0"
   }
 }
