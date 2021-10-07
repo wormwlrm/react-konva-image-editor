@@ -1,21 +1,20 @@
 {
   "compilerOptions": {
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "forceConsistentCasingInFileNames": true,
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable", 
+      "esnext"
+    ],
+    "allowSyntheticDefaultImports": true,
     "jsx": "react",
     "module": "es6",
+    "outDir": "lib",
     "moduleResolution": "node",
-    "noImplicitAny": true,
-    "outDir": "./dist",
-    "preserveConstEnums": true,
-    "target": "es5"
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
-    "tests/**/*.ts",
-    "tests/**/*.tsx"
   ],
   "exclude": [
     "node_modules"
