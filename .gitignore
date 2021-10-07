@@ -2,6 +2,7 @@
 node_modules
 /MEMO.md
 lib
+build
 
 /tests/e2e/videos/
 /tests/e2e/screenshots/
