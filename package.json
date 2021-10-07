@@ -4,7 +4,8 @@
   "description": "🖼 Image Editor based on Konva.js",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rollup -c",
+    "watch": "rollup -cw"
   },
   "repository": "git+https://github.com/wormwlrm/konva-image-editor.git",
   "author": "wormwlrm",
