@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "🖼 Image Editor based on Konva.js",
   "main": "lib/bundle.js",
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "build": "NODE_ENV=production rollup -c",
     "watch": "rollup -cw"
@@ -27,10 +30,18 @@
     "@types/react": "^17.0.27",
     "@types/react-dom": "^17.0.9",
     "babel-preset-react-app": "^10.0.0",
+    "eslint": "^7.2.0",
+    "eslint-config-airbnb": "18.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "konva": "^8.2.2",
     "node-sass": "^6.0.1",
     "postcss": "^8.3.9",
     "postcss-loader": "^6.1.1",
     "postcss-prefixer": "^2.1.3",
+    "react-konva": "^17.0.2-5",
     "rollup": "^2.58.0",
     "rollup-plugin-livereload": "^2.0.5",
     "rollup-plugin-peer-deps-external": "^2.2.4",
@@ -42,5 +53,6 @@
   "peerDependencies": {
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
-  }
+  },
+  "dependencies": {}
 }
