@@ -1,28 +1,28 @@
-import commonjs from "@rollup/plugin-commonjs";
-import resolve from "@rollup/plugin-node-resolve";
-import json from "@rollup/plugin-json";
-import typescript from "rollup-plugin-typescript2";
-import babel from "@rollup/plugin-babel";
-import livereload from "rollup-plugin-livereload";
-import serve from "rollup-plugin-serve";
-import replace from "@rollup/plugin-replace";
+import commonjs from '@rollup/plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
+import json from '@rollup/plugin-json';
+import typescript from 'rollup-plugin-typescript2';
+import babel from '@rollup/plugin-babel';
+import livereload from 'rollup-plugin-livereload';
+import serve from 'rollup-plugin-serve';
+import replace from '@rollup/plugin-replace';
+import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 
-const extensions = [".js", ".jsx", ".ts", ".tsx"];
+const extensions = ['.js', '.jsx', '.ts', '.tsx'];
 
 export default {
-  input:
-    process.env.NODE_ENV === "production"
-      ? "./src/index.tsx"
-      : "./src/components/index.ts",
+  input: './src/index.tsx',
   output: {
-    file:
-      process.env.NODE_ENV === "production"
-        ? "./lib/bundle.js"
-        : "./example/node_modules/konva-image-editor/lib/bundle.js",
-    format: "es",
+    file: './lib/bundle.js',
+    format: 'es',
     sourcemap: true,
+    globals: { react: 'React', 'react-dom': 'ReactDOM' },
   },
+  external: ['react', 'react-dom'],
+
   plugins: [
+    peerDepsExternal(),
+
     // json 파일 로드
     json(),
 
@@ -31,7 +31,7 @@ export default {
 
     // node_modules 에서 모듈을 불러올 수 있게 해줌
     // ts / tsx 파일도 불러올 수 있게 해줌
-    resolve({ extensions }),
+    resolve({ extensions, browser: true }),
 
     // cjs 기반 모듈 읽기
     commonjs({
@@ -40,17 +40,13 @@ export default {
 
     // 노드 환경 변수 치환
     replace({
-      "process.env.NODE_ENV": JSON.stringify("development"),
+      'process.env.NODE_ENV': JSON.stringify('development'),
     }),
 
     // 바벨 트랜스파일러 설정
     babel({
-      babelHelpers: "bundled",
-      presets: [
-        "@babel/preset-env",
-        "@babel/preset-react",
-        "@babel/preset-typescript",
-      ],
+      babelHelpers: 'bundled',
+      presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript'],
     }),
 
     // HRM
@@ -59,11 +55,10 @@ export default {
     // 개발 서버
     serve({
       verbose: true,
-      contentBase: ["", "src", "lib"],
+      contentBase: ['', 'src', 'lib'],
       historyApiFallback: true,
-      host: "localhost",
+      host: 'localhost',
       port: 3000,
     }),
   ],
-  external: ["react", "react-dom"],
 };

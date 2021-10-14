@@ -11,6 +11,7 @@
     "module": "es6",
     "outDir": "lib",
     "moduleResolution": "node",
+    "resolveJsonModule": true,
   },
   "include": [
     "src/**/*.ts",
