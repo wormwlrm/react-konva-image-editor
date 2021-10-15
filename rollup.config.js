@@ -1,3 +1,5 @@
+import path from 'path';
+
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import json from '@rollup/plugin-json';
@@ -7,8 +9,11 @@ import livereload from 'rollup-plugin-livereload';
 import serve from 'rollup-plugin-serve';
 import replace from '@rollup/plugin-replace';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
+import alias from '@rollup/plugin-alias';
 
 const extensions = ['.js', '.jsx', '.ts', '.tsx'];
+
+const rootDir = path.resolve(__dirname);
 
 export default {
   input: './src/index.tsx',
@@ -25,6 +30,13 @@ export default {
 
     // json 파일 로드
     json(),
+
+    alias({
+      entries: [
+        { find: '@', replacement: path.resolve(rootDir, 'src') },
+        { find: '@types', replacement: path.resolve(rootDir, '@types') },
+      ],
+    }),
 
     // 타입스크립트
     typescript(),

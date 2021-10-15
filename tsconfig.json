@@ -12,6 +12,15 @@
     "outDir": "lib",
     "moduleResolution": "node",
     "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "@types": [
+        "@types"
+      ]
+    },
   },
   "include": [
     "src/**/*.ts",
