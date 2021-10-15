@@ -1,7 +1,7 @@
 {
-  "name": "konva-image-editor",
+  "name": "react-konva-image-editor",
   "version": "0.0.1",
-  "description": "🖼 Image Editor based on Konva.js",
+  "description": "🖼 Image Editor based on React.js & Konva.js",
   "main": "lib/bundle.js",
   "files": [
     "lib"
@@ -10,13 +10,13 @@
     "build": "NODE_ENV=production rollup -c",
     "watch": "rollup -cw"
   },
-  "repository": "git+https://github.com/wormwlrm/konva-image-editor.git",
+  "repository": "git+https://github.com/wormwlrm/react-konva-image-editor.git",
   "author": "wormwlrm",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/wormwlrm/konva-image-editor/issues"
+    "url": "https://github.com/wormwlrm/react-konva-image-editor/issues"
   },
-  "homepage": "https://github.com/wormwlrm/konva-image-editor#readme",
+  "homepage": "https://github.com/wormwlrm/react-konva-image-editor#readme",
   "devDependencies": {
     "@babel/core": "^7.15.8",
     "@babel/preset-env": "^7.15.8",

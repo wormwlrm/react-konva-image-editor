@@ -1,2 +1,3 @@
-# konva-image-editor
+# react-konva-image-editor
+
 🖼 Image Editor based on Konva.js
