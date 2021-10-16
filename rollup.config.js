@@ -62,7 +62,7 @@ export default {
     }),
 
     // HRM
-    livereload(),
+    // livereload(),
 
     // 개발 서버
     serve({

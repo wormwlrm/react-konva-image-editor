@@ -27,5 +27,7 @@ module.exports = {
     'import/extensions': 0,
     '@typescript-eslint/no-use-before-define': ['error'],
     'no-use-before-define': 'off',
+    'import/prefer-default-export': 'off',
+    'react/jsx-props-no-spreading': 'off',
   },
 };
