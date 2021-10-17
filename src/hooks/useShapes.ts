@@ -35,8 +35,6 @@ export function useShapes() {
           radius: 50,
           fill: '#637EF7',
           type: 'circle',
-          id: generateId(),
-          draggable: true,
           ...shape,
         };
         break;

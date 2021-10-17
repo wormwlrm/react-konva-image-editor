@@ -39,24 +39,15 @@ export const TransformableCircle = ({
         {...props}
         draggable
         onMouseOver={(e) => {
-          const node = circleRef.current;
           const shape = e.target as CircleType;
+          // TODO: 색깔 나중에 고치자
+          shape.stroke('#00FF00');
+          shape.strokeWidth(10);
           shape.strokeEnabled(true);
-          console.log('mouseOver');
-          onChange({
-            id: node.id(),
-            stroke: 'red',
-          });
         }}
         onMouseLeave={(e) => {
-          const node = circleRef.current;
           const shape = e.target as CircleType;
           shape.strokeEnabled(false);
-
-          onChange({
-            id: node.id(),
-            stroke: 'transparent',
-          });
         }}
         onDragStart={onDragStart}
         onDragEnd={(e) => onDragEnd(e)}
@@ -76,7 +67,14 @@ export const TransformableCircle = ({
           });
         }}
       />
-      {isSelected && <Transformer ref={transformerRef} />}
+      {isSelected && (
+      <Transformer
+        style={{
+          isFocused: 'none',
+        }}
+        ref={transformerRef}
+      />
+      )}
     </>
   );
 };

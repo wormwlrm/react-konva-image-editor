@@ -11,8 +11,11 @@ export const useDraggable = ({
   const [focused, setFocused] = useState<null | string>(null);
 
   const onDragStart = (shape: ShapeConfig) => {
+    if (selected) {
+      setSelected(null);
+    }
+
     setFocused(shape.id);
-    setSelected(null);
   };
 
   const onDragEnd = (e: KonvaEventObject<DragEvent>) => {
