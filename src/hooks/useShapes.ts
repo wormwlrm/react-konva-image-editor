@@ -1,13 +1,15 @@
-import { ShapeConfig } from 'konva/lib/Shape';
+import Konva from 'konva';
 import { useMemo, useState } from 'react';
 
 import { useIdCounter } from './useIdCounter';
 
 export function useShapes() {
-  const [shapes, setShapes] = useState<ShapeConfig[]>([]);
+  const [shapes, setShapes] = useState<Konva.ShapeConfig[]>([]);
   const { generateId } = useIdCounter();
 
-  const updateShape = <T extends ShapeConfig>(config: T & { id: string }) => {
+  const updateShape = <T extends Konva.ShapeConfig>(
+    config: T & { id: string }
+  ) => {
     const updated = shapes.map((shape) => {
       if (shape.id === config.id) {
         return {
@@ -22,11 +24,12 @@ export function useShapes() {
     setShapes(updated);
   };
 
-  const addShape = <T extends ShapeConfig>(shape: T) => {
-    let created: ShapeConfig = {
+  const addShape = <T extends Konva.ShapeConfig>(shape: T) => {
+    let created: Konva.ShapeConfig = {
       id: generateId(),
       draggable: true,
     };
+
     switch (shape.type) {
       case 'ellipse':
         created = {

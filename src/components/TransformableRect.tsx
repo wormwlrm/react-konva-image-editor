@@ -1,9 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { Rect, Transformer } from 'react-konva';
 import { Portal } from 'react-konva-utils';
-import { Rect as RectType } from 'konva/lib/shapes/Rect';
-import { Transformer as TransformerType } from 'konva/lib/shapes/Transformer';
-import { ShapeConfig } from 'konva/lib/Shape';
+import Konva from 'konva';
 
 export const TransformableRect = ({
   onDragStart,
@@ -14,7 +12,7 @@ export const TransformableRect = ({
   isSelected,
   ...props
 }: {
-    onDragStart: (shape: ShapeConfig) => void;
+    onDragStart: (shape: Konva.ShapeConfig) => void;
     onDragEnd: (e: any) => void;
     onSelect: (e: any) => void;
     onTransform: (e: any) => void;
@@ -22,8 +20,8 @@ export const TransformableRect = ({
     isSelected: boolean;
     [key: string]: any;
 }) => {
-  const rectRef = useRef<RectType>();
-  const transformerRef = useRef<TransformerType>();
+  const rectRef = useRef<Konva.Rect>();
+  const transformerRef = useRef<Konva.Transformer>();
 
   useEffect(() => {
     if (isSelected) {
@@ -41,7 +39,7 @@ export const TransformableRect = ({
         draggable
         onDragStart={onDragStart}
         onDragEnd={(e) => onDragEnd(e)}
-        onTransformEnd={(e) => {
+        onTransformEnd={() => {
           const node = rectRef.current;
           const scaleX = node.scaleX();
           const scaleY = node.scaleY();

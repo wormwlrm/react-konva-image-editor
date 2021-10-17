@@ -1,5 +1,4 @@
-import { KonvaEventObject } from 'konva/lib/Node';
-import { ShapeConfig } from 'konva/lib/Shape';
+import Konva from 'konva';
 import { useState } from 'react';
 
 export const useDraggable = ({ updateShape }) => {
@@ -15,12 +14,12 @@ export const useDraggable = ({ updateShape }) => {
 
   const isSelected = (id: string) => selected === id;
 
-  const onDragStart = (shape: ShapeConfig) => {
+  const onDragStart = (shape: Konva.ShapeConfig) => {
     console.log(shape);
     setSelected(shape.id);
   };
 
-  const onDragEnd = (e: KonvaEventObject<DragEvent>) => {
+  const onDragEnd = (e: Konva.KonvaEventObject<DragEvent>) => {
     updateShape({
       id: selected,
       x: e.target.x(),

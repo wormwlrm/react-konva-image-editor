@@ -1,9 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { Ellipse, Transformer } from 'react-konva';
 import { Portal } from 'react-konva-utils';
-import { Ellipse as EllipseType } from 'konva/lib/shapes/Ellipse';
-import { Transformer as TransformerType } from 'konva/lib/shapes/Transformer';
-import { ShapeConfig } from 'konva/lib/Shape';
+import Konva from 'konva';
 
 export const TransformableCircle = ({
   onDragStart,
@@ -14,7 +12,7 @@ export const TransformableCircle = ({
   isSelected,
   ...props
 }: {
-    onDragStart: (shape: ShapeConfig) => void;
+    onDragStart: (shape: Konva.ShapeConfig) => void;
     onDragEnd: (e: any) => void;
     onSelect: (e: any) => void;
     onTransform: (e: any) => void;
@@ -24,8 +22,8 @@ export const TransformableCircle = ({
     radiusY: number;
     [key: string]: any;
 }) => {
-  const circleRef = useRef<EllipseType>();
-  const transformerRef = useRef<TransformerType>();
+  const circleRef = useRef<Konva.Ellipse>();
+  const transformerRef = useRef<Konva.Transformer>();
 
   useEffect(() => {
     if (isSelected) {
@@ -37,14 +35,13 @@ export const TransformableCircle = ({
   return (
     <>
       <Ellipse
-        onClick={onClick}
         ref={circleRef}
         {...props}
         draggable
+        onClick={onClick}
         onDragStart={onDragStart}
         onDragEnd={(e) => onDragEnd(e)}
         onTransformEnd={(e) => {
-          console.log(2, e);
           const node = circleRef.current;
           const scaleX = node.scaleX();
           const scaleY = node.scaleY();
