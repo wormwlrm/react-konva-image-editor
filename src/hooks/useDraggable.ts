@@ -4,7 +4,12 @@ import { useState } from 'react';
 export const useDraggable = ({ updateShape }) => {
   const [selected, setSelected] = useState<null | string>(null);
 
-  const unselect = (e) => {
+  const unselect = (e?) => {
+    if (e === undefined) {
+      setSelected(null);
+      return;
+    }
+
     const emptyClicked = e.target === e.target.getStage();
 
     if (emptyClicked) {
@@ -20,6 +25,7 @@ export const useDraggable = ({ updateShape }) => {
   };
 
   const onDragEnd = (e: Konva.KonvaEventObject<DragEvent>) => {
+    console.log('onDragEnd');
     updateShape({
       id: selected,
       x: e.target.x(),

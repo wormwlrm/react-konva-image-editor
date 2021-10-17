@@ -1,15 +1,26 @@
+import { ShapesHistory } from '@types';
 import Konva from 'konva';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { useIdCounter } from './useIdCounter';
 
-export function useShapes() {
+export function useShapes({
+  saveHistory,
+  history,
+  historyIndex,
+}: {
+  saveHistory: (state: ShapesHistory) => void;
+  history: ShapesHistory[];
+  historyIndex: number;
+}) {
   const [shapes, setShapes] = useState<Konva.ShapeConfig[]>([]);
   const { generateId } = useIdCounter();
 
   const updateShape = <T extends Konva.ShapeConfig>(
     config: T & { id: string }
   ) => {
+    console.log('onUpdateShapeStart');
+
     const updated = shapes.map((shape) => {
       if (shape.id === config.id) {
         return {
@@ -20,8 +31,10 @@ export function useShapes() {
       return shape;
     });
 
-    console.log(updated);
     setShapes(updated);
+    saveHistory(updated);
+
+    return updated;
   };
 
   const addShape = <T extends Konva.ShapeConfig>(shape: T) => {
@@ -61,9 +74,17 @@ export function useShapes() {
     }
 
     setShapes(shapes.concat(created));
+    saveHistory(shapes.concat(created));
 
     return created;
   };
+
+  // HistoryIndex 변하면 history 번째 인덱스꺼 가져와서 변화시키기
+  useEffect(() => {
+    console.log(historyIndex);
+
+    setShapes(history[historyIndex]);
+  }, [historyIndex]);
 
   const circles = useMemo(
     () => shapes.filter((shape) => shape.type === 'ellipse'),
