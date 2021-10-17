@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import {
-  Stage, Layer, Circle, Rect
+  Stage, Layer, Rect
 } from 'react-konva';
 import { InitialSetting } from '@types';
-import { ShapeConfig } from 'konva/lib/Shape';
-import { KonvaEventObject } from 'konva/lib/Node';
 
 import { Toolbar } from './Toolbar';
 
 import {
-  WindowSize, useResizer, useFocusable, useShapes
+  WindowSize, useResizer, useShapes, useSelectable, useDraggable
 } from '@/hooks';
+import { TransformableCircle } from '@/components';
 
 export const Editor = ({
   width = window.innerWidth,
@@ -25,50 +24,63 @@ export const Editor = ({
     circles, rectangles, updateShape, addShape,
   } = useShapes();
 
-  const { focused, setFocused } = useFocusable();
+  const {
+    selected, setSelected, isSelected, unselect,
+  } = useSelectable();
 
-  const onDragStart = (shape: ShapeConfig) => {
-    setFocused(shape.id);
-  };
+  const { onDragStart, onDragEnd, isFocused } = useDraggable({
+    selected,
 
-  const onDragEnd = (e: KonvaEventObject<DragEvent>) => {
-    updateShape({
-      id: focused,
-      x: e.target.x(),
-      y: e.target.y(),
-    });
-    setFocused(null);
-  };
+    setSelected,
+    unselect,
+    updateShape,
+  });
 
   return (
     <div className="react-konva-image-editor">
       <Toolbar />
       <button
         type="button"
-        onClick={() => addShape({
-          type: 'circle',
-        })}
+        onClick={() => {
+          const shape = addShape({
+            type: 'circle',
+          });
+          setSelected(shape.id);
+        }}
       >
         Add Circle
       </button>
       <button
         type="button"
         onClick={() => {
-          addShape({
+          const shape = addShape({
             type: 'rect',
           });
+          setSelected(shape.id);
         }}
       >
         Add Rect
       </button>
-      <Stage width={size.width} height={size.height}>
+      <Stage
+        width={size.width}
+        height={size.height}
+        onMouseDown={unselect}
+        onTouchStart={unselect}
+      >
         <Layer>
           {circles.map((shape) => (
-            <Circle
+            <TransformableCircle
               key={shape.id}
               {...shape}
+              isFocused={isFocused(shape.id)}
+              isSelected={isSelected(shape.id)}
+              onSelect={() => setSelected(shape.id)}
               onDragStart={() => onDragStart(shape)}
               onDragEnd={(e) => onDragEnd(e)}
+              onChange={(e) => updateShape({
+                ...e,
+                id: shape.id,
+              })}
             />
           ))}
           {rectangles.map((shape) => (

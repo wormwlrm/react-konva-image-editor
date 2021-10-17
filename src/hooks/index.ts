@@ -1,5 +1,5 @@
 export * from './useShapes';
-export * from './useFocusable';
+export * from './useDraggable';
 export * from './useSelectable';
 export * from './useResizer';
 export * from './useIdCounter';

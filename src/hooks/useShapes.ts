@@ -57,6 +57,8 @@ export function useShapes() {
     }
 
     setShapes(shapes.concat(created));
+
+    return created;
   };
 
   const circles = useMemo(
