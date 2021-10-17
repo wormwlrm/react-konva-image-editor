@@ -2,41 +2,39 @@ import { KonvaEventObject } from 'konva/lib/Node';
 import { ShapeConfig } from 'konva/lib/Shape';
 import { useState } from 'react';
 
-export const useDraggable = ({
-  selected,
-  setSelected,
-  unselect,
-  updateShape,
-}) => {
-  const [focused, setFocused] = useState<null | string>(null);
+export const useDraggable = ({ updateShape }) => {
+  const [selected, setSelected] = useState<null | string>(null);
 
-  const onDragStart = (shape: ShapeConfig) => {
-    if (selected) {
+  const unselect = (e) => {
+    const emptyClicked = e.target === e.target.getStage();
+
+    if (emptyClicked) {
       setSelected(null);
     }
+  };
 
-    setFocused(shape.id);
+  const isSelected = (id: string) => selected === id;
+
+  const onDragStart = (shape: ShapeConfig) => {
+    console.log(shape);
+    setSelected(shape.id);
   };
 
   const onDragEnd = (e: KonvaEventObject<DragEvent>) => {
     updateShape({
-      id: focused,
+      id: selected,
       x: e.target.x(),
       y: e.target.y(),
     });
-
-    setFocused(null);
-    setSelected(focused);
   };
 
-  const isFocused = (id: string) => focused === id;
-
   return {
-    focused,
-    setFocused,
+    selected,
+    setSelected,
+    unselect,
+    isSelected,
 
     onDragStart,
     onDragEnd,
-    isFocused,
   };
 };

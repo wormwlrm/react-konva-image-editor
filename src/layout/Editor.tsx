@@ -8,7 +8,7 @@ import { InitialSetting } from '@types';
 import { Toolbar } from './Toolbar';
 
 import {
-  WindowSize, useResizer, useShapes, useSelectable, useDraggable
+  WindowSize, useResizer, useShapes, useDraggable
 } from '@/hooks';
 import { TransformableCircle } from '@/components';
 
@@ -25,14 +25,8 @@ export const Editor = ({
   } = useShapes();
 
   const {
-    selected, setSelected, isSelected, unselect,
-  } = useSelectable();
-
-  const { onDragStart, onDragEnd, isFocused } = useDraggable({
-    selected,
-
-    setSelected,
-    unselect,
+    selected, onDragStart, onDragEnd, unselect, setSelected, isSelected,
+  } = useDraggable({
     updateShape,
   });
 
@@ -43,7 +37,7 @@ export const Editor = ({
         type="button"
         onClick={() => {
           const shape = addShape({
-            type: 'circle',
+            type: 'ellipse',
           });
           setSelected(shape.id);
         }}
@@ -72,15 +66,22 @@ export const Editor = ({
             <TransformableCircle
               key={shape.id}
               {...shape}
-              isFocused={isFocused(shape.id)}
-              isSelected={isSelected(shape.id)}
+              radiusX={shape.radiusX}
+              radiusY={shape.radiusY}
+              isSelected={selected === shape.id}
               onSelect={() => setSelected(shape.id)}
               onDragStart={() => onDragStart(shape)}
               onDragEnd={(e) => onDragEnd(e)}
-              onChange={(e) => updateShape({
-                ...e,
-                id: shape.id,
-              })}
+              onTransform={(s) => {
+                console.log(1, s);
+                updateShape({
+                  ...s,
+                  id: shape.id,
+                });
+              }}
+              onClick={() => {
+                setSelected(shape.id);
+              }}
             />
           ))}
           {rectangles.map((shape) => (

@@ -18,6 +18,7 @@ export function useShapes() {
       return shape;
     });
 
+    console.log(updated);
     setShapes(updated);
   };
 
@@ -27,14 +28,16 @@ export function useShapes() {
       draggable: true,
     };
     switch (shape.type) {
-      case 'circle':
+      case 'ellipse':
         created = {
           ...created,
           y: Math.random() * 100,
           x: Math.random() * 100,
-          radius: 50,
+          rotation: 0,
+          radiusX: 50,
+          radiusY: 50,
           fill: '#637EF7',
-          type: 'circle',
+          type: 'ellipse',
           ...shape,
         };
         break;
@@ -60,7 +63,7 @@ export function useShapes() {
   };
 
   const circles = useMemo(
-    () => shapes.filter((shape) => shape.type === 'circle'),
+    () => shapes.filter((shape) => shape.type === 'ellipse'),
     [shapes]
   );
 
