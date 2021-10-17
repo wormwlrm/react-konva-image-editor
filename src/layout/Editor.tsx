@@ -7,12 +7,13 @@ import { InitialSetting } from '@types';
 import { ShapeConfig } from 'konva/lib/Shape';
 import { KonvaEventObject } from 'konva/lib/Node';
 
-import { Toolbar } from '@/components';
+import { Toolbar } from './Toolbar';
+
 import {
   WindowSize, useResizer, useFocusable, useShapes
 } from '@/hooks';
 
-const Editor = ({
+export const Editor = ({
   width = window.innerWidth,
   height = 500,
 }: InitialSetting = {}) => {
@@ -83,5 +84,3 @@ const Editor = ({
     </div>
   );
 };
-
-export default Editor;

@@ -16,7 +16,7 @@ const extensions = ['.js', '.jsx', '.ts', '.tsx'];
 const rootDir = path.resolve(__dirname);
 
 export default {
-  input: './src/index.tsx',
+  input: './src/index.ts',
   output: {
     file: './lib/bundle.js',
     format: 'es',
@@ -58,7 +58,11 @@ export default {
     // 바벨 트랜스파일러 설정
     babel({
       babelHelpers: 'bundled',
-      presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript'],
+      presets: [
+        '@babel/preset-env',
+        '@babel/preset-react',
+        '@babel/preset-typescript',
+      ],
     }),
 
     // HRM

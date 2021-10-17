@@ -1,7 +1,7 @@
 import { ShapeConfig } from 'konva/lib/Shape';
 import { useMemo, useState } from 'react';
 
-import { useIdCounter } from '.';
+import { useIdCounter } from './useIdCounter';
 
 export function useShapes() {
   const [shapes, setShapes] = useState<ShapeConfig[]>([]);
