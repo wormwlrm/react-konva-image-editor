@@ -10,7 +10,7 @@ import { Toolbar } from './Toolbar';
 import {
   WindowSize, useResizer, useShapes, useDraggable
 } from '@/hooks';
-import { TransformableCircle } from '@/components';
+import { TransformableCircle, TransformableRect } from '@/components';
 
 export const Editor = ({
   width = window.innerWidth,
@@ -72,24 +72,26 @@ export const Editor = ({
               onSelect={() => setSelected(shape.id)}
               onDragStart={() => onDragStart(shape)}
               onDragEnd={(e) => onDragEnd(e)}
-              onTransform={(s) => {
-                console.log(1, s);
-                updateShape({
-                  ...s,
-                  id: shape.id,
-                });
-              }}
-              onClick={() => {
-                setSelected(shape.id);
-              }}
+              onClick={() => setSelected(shape.id)}
+              onTransform={(updated) => updateShape({
+                ...updated,
+                id: shape.id,
+              })}
             />
           ))}
           {rectangles.map((shape) => (
-            <Rect
+            <TransformableRect
               key={shape.id}
               {...shape}
+              isSelected={selected === shape.id}
+              onSelect={() => setSelected(shape.id)}
               onDragStart={() => onDragStart(shape)}
               onDragEnd={(e) => onDragEnd(e)}
+              onClick={() => setSelected(shape.id)}
+              onTransform={(updated) => updateShape({
+                ...updated,
+                id: shape.id,
+              })}
             />
           ))}
         </Layer>
