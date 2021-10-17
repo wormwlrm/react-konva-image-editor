@@ -29,5 +29,20 @@ module.exports = {
     'no-use-before-define': 'off',
     'import/prefer-default-export': 'off',
     'react/jsx-props-no-spreading': 'off',
+    'max-len': ['error', { code: 80 }],
+    'arrow-body-style': [
+      'error',
+      'as-needed',
+      { requireReturnForObjectLiteral: true },
+    ],
+    'implicit-arrow-linebreak': 'off',
+    'comma-dangle': [
+      'error',
+      {
+        functions: 'never',
+        arrays: 'always-multiline',
+        objects: 'always-multiline',
+      },
+    ],
   },
 };
