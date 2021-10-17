@@ -93,7 +93,9 @@ export const Editor = ({
             />
           ))}
         </Layer>
+        <Layer name="top-layer" />
       </Stage>
+
     </div>
   );
 };

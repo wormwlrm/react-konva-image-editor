@@ -4213,7 +4213,15 @@ react-is@^16.8.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
-react-konva@^17.0.2-5:
+react-konva-utils@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/react-konva-utils/-/react-konva-utils-0.2.0.tgz#e79ed7776edd50f40c152d8d49d2693ff12e910b"
+  integrity sha512-xjxhmuZnRJthInyb5wLwdgtO5gQnUvCpEutMoFwQtnwL4s4JFNLTq+fjlmCGhP+TxiJXiztzwinptL+wxP16pg==
+  dependencies:
+    react-konva "^17.0.2-4"
+    use-image "^1.0.7"
+
+react-konva@^17.0.2-4, react-konva@^17.0.2-5:
   version "17.0.2-5"
   resolved "https://registry.yarnpkg.com/react-konva/-/react-konva-17.0.2-5.tgz#e70b0acf323402de0a540f27b300fbe7ed151849"
   integrity sha512-IyzdfqRDK8r1ulp/jbLPX18AuO+n5yNtL0+4T0QEUsgArRqIl/VRCG1imA5mYJBk0cBNC5+fWDHN+HWEW62ZEQ==
@@ -5027,6 +5035,11 @@ uri-js@^4.2.2:
   integrity sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==
   dependencies:
     punycode "^2.1.0"
+
+use-image@^1.0.7:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/use-image/-/use-image-1.0.8.tgz#a8fa4ae359afbb0fc30c7cab0a7f4d537281a9d4"
+  integrity sha512-mTQBg+e+tLXvhxq2MozH2ZdUPglG7ozLUlSB036soydO1wg1ZV5msZ4X3aw7gX4ozW0P9yHYZAiZB+qbIdQJZQ==
 
 util-deprecate@^1.0.2, util-deprecate@~1.0.1:
   version "1.0.2"

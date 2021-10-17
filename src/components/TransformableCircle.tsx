@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { Ellipse, Transformer } from 'react-konva';
+import { Portal } from 'react-konva-utils';
 import { Ellipse as EllipseType } from 'konva/lib/shapes/Ellipse';
 import { Transformer as TransformerType } from 'konva/lib/shapes/Transformer';
 import { ShapeConfig } from 'konva/lib/Shape';
@@ -60,10 +61,13 @@ export const TransformableCircle = ({
           });
         }}
       />
+
       {isSelected && (
-        <Transformer
-          ref={transformerRef}
-        />
+        <Portal selector=".top-layer" enabled={isSelected}>
+          <Transformer
+            ref={transformerRef}
+          />
+        </Portal>
       )}
     </>
   );
