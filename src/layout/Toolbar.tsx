@@ -2,21 +2,14 @@ import Konva from 'konva';
 import React, { useContext } from 'react';
 
 import { HistoryContext } from '@/context';
+import { ShapesContext } from '@/context/ShapesContext';
 
-export const Toolbar = ({
-  addShape,
-  setSelected,
-  canUndo,
-  canRedo,
-}: {
-  addShape: ({ type }: { type: string }) => Konva.ShapeConfig;
-  setSelected: (selected: string) => void;
-  canUndo: boolean;
-  canRedo: boolean;
-}) => {
+export const Toolbar = () => {
   const {
-    redo, undo,
+    redo, undo, canRedo, canUndo,
   } = useContext(HistoryContext);
+
+  const { addShape, setSelected } = useContext(ShapesContext);
 
   const handleAdd = (type: string) => {
     const shape = addShape({ type });

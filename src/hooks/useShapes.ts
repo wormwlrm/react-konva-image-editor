@@ -1,20 +1,24 @@
-import { ShapesHistory } from '@types';
 import Konva from 'konva';
-import { useEffect, useMemo, useState } from 'react';
+import React, {
+  useContext, useEffect, useMemo, useState
+} from 'react';
+import { EllipseConfig } from 'konva/lib/shapes/Ellipse';
+import { RectConfig } from 'konva/lib/shapes/Rect';
 
 import { useIdCounter } from './useIdCounter';
 
-export function useShapes({
-  saveHistory,
-  history,
-  historyIndex,
-}: {
-  saveHistory: (state: ShapesHistory) => void;
-  history: ShapesHistory[];
-  historyIndex: number;
-}) {
+import { HistoryContext } from '@/context';
+
+export function useShapes() {
   const [shapes, setShapes] = useState<Konva.ShapeConfig[]>([]);
+
   const { generateId } = useIdCounter();
+
+  const {
+    saveHistory,
+    history,
+    index: historyIndex,
+  } = useContext(HistoryContext);
 
   const updateShape = <T extends Konva.ShapeConfig>(
     config: T & { id: string }
@@ -86,13 +90,13 @@ export function useShapes({
     setShapes(history[historyIndex]);
   }, [historyIndex]);
 
-  const circles = useMemo(
-    () => shapes.filter((shape) => shape.type === 'ellipse'),
+  const circles: EllipseConfig[] = useMemo(
+    () => shapes.filter((shape) => shape.type === 'ellipse') as EllipseConfig[],
     [shapes]
   );
 
-  const rectangles = useMemo(
-    () => shapes.filter((shape) => shape.type === 'rectangle'),
+  const rectangles: RectConfig[] = useMemo(
+    () => shapes.filter((shape) => shape.type === 'rectangle') as RectConfig[],
     [shapes]
   );
 

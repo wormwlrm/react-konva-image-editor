@@ -7,14 +7,12 @@ export const TransformableCircle = ({
   onDragStart,
   onDragEnd,
   onClick,
-  onSelect,
   onTransform,
   isSelected,
   ...props
 }: {
     onDragStart: (shape: Konva.ShapeConfig) => void;
     onDragEnd: (e: any) => void;
-    onSelect: (e: any) => void;
     onTransform: (e: any) => void;
     onClick: (e: any) => void;
     isSelected: boolean;

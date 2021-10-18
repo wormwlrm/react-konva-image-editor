@@ -1,5 +1,5 @@
 import { ShapesHistory } from '@types';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 const useHistory = () => {
   const [history, setHistory] = useState<ShapesHistory[]>([[]]);
@@ -13,7 +13,26 @@ const useHistory = () => {
     setHistoryIndex(historyIndex + 1);
   };
 
+  const canUndo = useMemo(
+    () => history.length > 0 && historyIndex > 0,
+    [history, historyIndex]
+  );
+
+  const canRedo = useMemo(
+    () => history.length > 0 && historyIndex < history.length - 1,
+    [history, historyIndex]
+  );
+
+  const currentHistory = useMemo(
+    () => history[historyIndex],
+    [history, historyIndex]
+  );
+
   const undo = () => {
+    if (!canUndo) {
+      return;
+    }
+
     if (historyIndex === 0) {
       return;
     }
@@ -22,18 +41,15 @@ const useHistory = () => {
   };
 
   const redo = () => {
+    if (!canRedo) {
+      return;
+    }
     if (historyIndex === history.length - 1) {
       return;
     }
 
     setHistoryIndex(historyIndex + 1);
   };
-
-  const canUndo = () => history.length > 0 && historyIndex > 0;
-
-  const canRedo = () => history.length > 0 && historyIndex < history.length - 1;
-
-  const currentHistory = () => history[historyIndex];
 
   return {
     history,

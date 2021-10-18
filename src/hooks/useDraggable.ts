@@ -17,15 +17,14 @@ export const useDraggable = ({ updateShape }) => {
     }
   };
 
-  const isSelected = (id: string) => selected === id;
-
-  const onDragStart = (shape: Konva.ShapeConfig) => {
-    console.log(shape);
+  const onDragStart = (
+    e: Konva.KonvaEventObject<DragEvent>,
+    shape: Konva.ShapeConfig
+  ) => {
     setSelected(shape.id);
   };
 
   const onDragEnd = (e: Konva.KonvaEventObject<DragEvent>) => {
-    console.log('onDragEnd');
     updateShape({
       id: selected,
       x: e.target.x(),
@@ -37,7 +36,6 @@ export const useDraggable = ({ updateShape }) => {
     selected,
     setSelected,
     unselect,
-    isSelected,
 
     onDragStart,
     onDragEnd,
