@@ -24,6 +24,7 @@ module.exports = {
     'import/order': ['error', { 'newlines-between': 'always' }],
     'react/jsx-filename-extension': 0,
     'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
     'import/extensions': 0,
     '@typescript-eslint/no-use-before-define': ['error'],
     'no-use-before-define': 'off',
