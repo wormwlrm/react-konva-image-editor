@@ -1,11 +1,12 @@
 import React, { createContext, ReactNode } from 'react';
 import Konva from 'konva';
 
-import { useDraggable, useShapes } from '@/hooks';
+import { useDraggable, useShapes, useFocusable } from '@/hooks';
 
 interface IShapesContext {
   shapes: Konva.ShapeConfig[];
   selected: null | string;
+  focused: null | string;
   updateShape: <T extends Konva.ShapeConfig>(config: T & { id: string; })
     => Konva.ShapeConfig[];
   addShape: (config: Konva.ShapeConfig) => Konva.ShapeConfig;
@@ -13,27 +14,32 @@ interface IShapesContext {
   onDragEnd: (e: Konva.KonvaEventObject<DragEvent>) => void;
   unselect: () => void;
   setSelected: (id: string) => void;
+  setFocused: (id: string) => void;
 
-  circles: Konva.EllipseConfig[];
-  rectangles: Konva.RectConfig[];
+  circles: (Konva.EllipseConfig& {id: string})[];
+  rectangles: (Konva.RectConfig& {id: string})[];
+  texts: (Konva.TextConfig& {id: string})[] ;
 }
 
 const ShapesContext = createContext<IShapesContext>({
   shapes: [],
   selected: null,
+  focused: null,
   updateShape: () => [],
   addShape: () => { return { x: 0, y: 0 }; },
   onDragStart: () => { },
   onDragEnd: () => { },
   unselect: () => { },
   setSelected: () => { },
+  setFocused: () => {},
   circles: [],
   rectangles: [],
+  texts: [],
 });
 
 const ShapesProvider = ({ children }: {children: ReactNode}) => {
   const {
-    shapes, circles, rectangles, updateShape, addShape,
+    shapes, circles, rectangles, texts, updateShape, addShape,
   } = useShapes();
 
   const {
@@ -42,9 +48,13 @@ const ShapesProvider = ({ children }: {children: ReactNode}) => {
     updateShape,
   });
 
+  const { focused, setFocused } = useFocusable();
+
   const initialState: IShapesContext = {
     shapes,
     selected,
+    focused,
+    setFocused,
     updateShape,
     addShape,
     onDragStart,
@@ -54,6 +64,7 @@ const ShapesProvider = ({ children }: {children: ReactNode}) => {
 
     circles,
     rectangles,
+    texts,
   };
 
   return (

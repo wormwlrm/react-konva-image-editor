@@ -1,8 +1,13 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Stage, Layer } from 'react-konva';
+import Konva from 'konva';
 
-import { TransformableCircle, TransformableRect } from '@/components';
+import {
+  EditableText,
+  TransformableCircle,
+  TransformableRect
+} from '@/components';
 import {
   useResizer, WindowSize
 } from '@/hooks';
@@ -26,50 +31,71 @@ const Canvas = ({
     unselect,
     circles,
     rectangles,
+    texts,
     selected,
   } = useContext(ShapesContext);
 
+  const stage = useRef<Konva.Stage>();
+
   return (
-    <Stage
-      width={size.width}
-      height={size.height}
-      onMouseDown={unselect}
-      onTouchStart={unselect}
-    >
-      <Layer>
-        {circles.map((shape) => (
-          <TransformableCircle
-            key={shape.id}
-            {...shape}
-            radiusX={shape.radiusX}
-            radiusY={shape.radiusY}
-            isSelected={selected === shape.id}
-            onClick={() => setSelected(shape.id)}
-            onDragStart={(e) => onDragStart(e, shape)}
-            onDragEnd={(e) => onDragEnd(e)}
-            onTransform={(updated) => updateShape({
-              ...updated,
-              id: shape.id,
-            })}
-          />
-        ))}
-        {rectangles.map((shape) => (
-          <TransformableRect
-            key={shape.id}
-            {...shape}
-            isSelected={selected === shape.id}
-            onDragStart={(e) => onDragStart(e, shape)}
-            onDragEnd={(e) => onDragEnd(e)}
-            onClick={() => setSelected(shape.id)}
-            onTransform={(updated) => updateShape({
-              ...updated,
-              id: shape.id,
-            })}
-          />
-        ))}
-      </Layer>
-      <Layer name="top-layer" />
-    </Stage>
+    <>
+      <Stage
+        ref={stage}
+        width={size.width}
+        height={size.height}
+        onMouseDown={unselect}
+        onTouchStart={unselect}
+      >
+        <Layer>
+          {circles.map((shape) => (
+            <TransformableCircle
+              key={shape.id}
+              {...shape}
+              radiusX={shape.radiusX}
+              radiusY={shape.radiusY}
+              isSelected={selected === shape.id}
+              onClick={() => setSelected(shape.id)}
+              onDragStart={(e) => onDragStart(e, shape)}
+              onDragEnd={(e) => onDragEnd(e)}
+              onTransform={(updated) => updateShape({
+                ...updated,
+                id: shape.id,
+              })}
+            />
+          ))}
+          {rectangles.map((shape) => (
+            <TransformableRect
+              key={shape.id}
+              {...shape}
+              isSelected={selected === shape.id}
+              onDragStart={(e) => onDragStart(e, shape)}
+              onDragEnd={(e) => onDragEnd(e)}
+              onClick={() => setSelected(shape.id)}
+              onTransform={(updated) => updateShape({
+                ...updated,
+                id: shape.id,
+              })}
+            />
+          ))}
+          {texts.map((shape) => (
+            <EditableText
+              key={shape.id!}
+              {...shape}
+              stage={stage.current}
+              isSelected={selected === shape.id}
+              onDragStart={(e) => onDragStart(e, shape)}
+              onDragEnd={(e) => onDragEnd(e)}
+              onClick={() => setSelected(shape.id)}
+              onTransform={(updated) => updateShape({
+                ...updated,
+                id: shape.id,
+              })}
+            />
+          ))}
+        </Layer>
+        <Layer name="top-layer" />
+      </Stage>
+    </>
   );
 };
 

@@ -33,6 +33,12 @@ export const Toolbar = () => {
       </button>
       <button
         type="button"
+        onClick={() => handleAdd('text')}
+      >
+        Add Text
+      </button>
+      <button
+        type="button"
         disabled={!canUndo}
         onClick={undo}
       >

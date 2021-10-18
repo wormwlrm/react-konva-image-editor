@@ -4,6 +4,7 @@ import React, {
 } from 'react';
 import { EllipseConfig } from 'konva/lib/shapes/Ellipse';
 import { RectConfig } from 'konva/lib/shapes/Rect';
+import { TextConfig } from 'konva/lib/shapes/Text';
 
 import { useIdCounter } from './useIdCounter';
 
@@ -73,6 +74,23 @@ export function useShapes() {
           type: 'rectangle',
         };
         break;
+
+      case 'text':
+        created = {
+          ...created,
+          y: Math.random() * 100,
+          x: Math.random() * 100,
+          rotation: 0,
+          fill: '#637EF7',
+          type: 'text',
+          text: 'Double click to edit',
+          fontSize: 28,
+          fontStyle: 'normal',
+          align: 'left',
+          ...shape,
+        };
+        break;
+
       default:
         break;
     }
@@ -90,13 +108,21 @@ export function useShapes() {
     setShapes(history[historyIndex]);
   }, [historyIndex]);
 
-  const circles: EllipseConfig[] = useMemo(
-    () => shapes.filter((shape) => shape.type === 'ellipse') as EllipseConfig[],
+  const circles: (EllipseConfig& { id: string })[] = useMemo(
+    () => shapes.filter((shape) =>
+      shape.type === 'ellipse') as (EllipseConfig& { id: string })[],
     [shapes]
   );
 
-  const rectangles: RectConfig[] = useMemo(
-    () => shapes.filter((shape) => shape.type === 'rectangle') as RectConfig[],
+  const rectangles: (RectConfig & { id: string })[] = useMemo(
+    () => shapes.filter((shape) =>
+      shape.type === 'rectangle') as (RectConfig & { id: string })[],
+    [shapes]
+  );
+
+  const texts: (TextConfig & {id: string})[] = useMemo(
+    () => shapes.filter((shape) =>
+      shape.type === 'text') as (TextConfig & {id: string})[],
     [shapes]
   );
 
@@ -104,6 +130,7 @@ export function useShapes() {
     shapes,
     circles,
     rectangles,
+    texts,
 
     setShapes,
     updateShape,

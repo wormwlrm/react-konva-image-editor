@@ -5,8 +5,8 @@ import { Toolbar } from './Toolbar';
 import { Canvas } from './Canvas';
 
 import { HistoryProvider } from '@/context';
-import { useDraggable, useShapes } from '@/hooks';
 import { ShapesProvider } from '@/context/ShapesContext';
+import { TextareaPortal } from '@/portals';
 
 export const Editor = ({
   width = window.innerWidth,
@@ -20,5 +20,6 @@ export const Editor = ({
         <Canvas width={width} height={height} />
       </ShapesProvider>
     </HistoryProvider>
+    <div id="react-konva-image-editor-textarea" />
   </div>
 );
