@@ -1,7 +1,5 @@
 import Konva from 'konva';
-import React, {
-  useContext, useEffect, useMemo, useState
-} from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { EllipseConfig } from 'konva/lib/shapes/Ellipse';
 import { RectConfig } from 'konva/lib/shapes/Rect';
 import { TextConfig } from 'konva/lib/shapes/Text';
@@ -24,8 +22,6 @@ export function useShapes() {
   const updateShape = <T extends Konva.ShapeConfig>(
     config: T & { id: string }
   ) => {
-    console.log('onUpdateShapeStart');
-
     const updated = shapes.map((shape) => {
       if (shape.id === config.id) {
         return {
@@ -35,6 +31,8 @@ export function useShapes() {
       }
       return shape;
     });
+
+    console.log('updateShape');
 
     setShapes(updated);
     saveHistory(updated);
@@ -87,6 +85,7 @@ export function useShapes() {
           fontSize: 28,
           fontStyle: 'normal',
           align: 'left',
+          wrap: 'word',
           ...shape,
         };
         break;
@@ -94,6 +93,8 @@ export function useShapes() {
       default:
         break;
     }
+
+    console.log('setShape');
 
     setShapes(shapes.concat(created));
     saveHistory(shapes.concat(created));
@@ -103,26 +104,30 @@ export function useShapes() {
 
   // HistoryIndex 변하면 history 번째 인덱스꺼 가져와서 변화시키기
   useEffect(() => {
-    console.log(historyIndex);
-
     setShapes(history[historyIndex]);
   }, [historyIndex]);
 
-  const circles: (EllipseConfig& { id: string })[] = useMemo(
-    () => shapes.filter((shape) =>
-      shape.type === 'ellipse') as (EllipseConfig& { id: string })[],
+  const circles: (EllipseConfig & { id: string })[] = useMemo(
+    () =>
+      shapes.filter((shape) => shape.type === 'ellipse') as (EllipseConfig & {
+        id: string;
+      })[],
     [shapes]
   );
 
   const rectangles: (RectConfig & { id: string })[] = useMemo(
-    () => shapes.filter((shape) =>
-      shape.type === 'rectangle') as (RectConfig & { id: string })[],
+    () =>
+      shapes.filter((shape) => shape.type === 'rectangle') as (RectConfig & {
+        id: string;
+      })[],
     [shapes]
   );
 
-  const texts: (TextConfig & {id: string})[] = useMemo(
-    () => shapes.filter((shape) =>
-      shape.type === 'text') as (TextConfig & {id: string})[],
+  const texts: (TextConfig & { id: string })[] = useMemo(
+    () =>
+      shapes.filter((shape) => shape.type === 'text') as (TextConfig & {
+        id: string;
+      })[],
     [shapes]
   );
 

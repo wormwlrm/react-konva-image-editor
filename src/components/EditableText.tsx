@@ -5,8 +5,7 @@ import { Text, Transformer } from 'react-konva';
 import { Html, Portal } from 'react-konva-utils';
 import Konva from 'konva';
 
-import { TextareaPortal } from '@/portals';
-import { ShapesContext } from '@/context';
+import { useShapesContext } from '@/hooks';
 
 const EditableText = ({
   onDragStart,
@@ -16,6 +15,7 @@ const EditableText = ({
   isSelected,
   stage,
   id,
+  text,
   ...props
 }: {
   onDragStart: (shape: Konva.ShapeConfig) => void;
@@ -25,159 +25,49 @@ const EditableText = ({
   isSelected: boolean;
   stage: Konva.Stage;
   id: string;
+  text: string;
   [key: string]: any;
 }) => {
+  const { focused, setFocused, unfocus } = useShapesContext();
+
   const shapeRef = useRef<Konva.Text>();
   const textareaRef = useRef<HTMLTextAreaElement>();
   const transformerRef = useRef<Konva.Transformer>();
+  const [created, setCreated] = useState<boolean>(false);
 
   const [divProps, setDivProps] = useState<any>({
     style: {
       display: 'none',
       position: 'absolute',
-      top: '10px',
-      left: '20px',
-      width: '30px',
-      height: '40px',
     },
   });
 
   const [textareaProps, setTextareaProps] = useState<any>({
-    value: '',
     style: {
+      border: 'none',
+      padding: '0px',
+      margin: '0px',
+      overflow: 'hidden',
+      background: 'none',
+      outline: 'none',
+      resize: 'none',
+      height: '',
       fontSize: '',
-      border: '',
-      padding: '',
-      margin: '',
-      overflow: '',
-      background: '',
-      outline: '',
-      resize: '',
       lineHeight: '',
       fontFamily: '',
-      transformOrigin: '',
       textAlign: '',
       color: '',
       transform: '',
+      transformOrigin: 'left top',
+      width: '100%',
+      wordBreak: 'keep-all',
     },
   });
 
-  const [originProps, setOriginProps] = useState<any>({
-    value: '',
-    style: {
-      fontSize: '',
-      border: '',
-      padding: '',
-      margin: '',
-      overflow: '',
-      background: '',
-      outline: '',
-      resize: '',
-      lineHeight: '',
-      fontFamily: '',
-      transformOrigin: '',
-      textAlign: '',
-      color: '',
-      transform: '',
-    },
-  });
+  const [originValue, setOriginValue] = useState<string>(text);
+  const [textareaValue, setTextareaValue] = useState<string>(originValue);
 
-  const { focused, setFocused, selected } = useContext(ShapesContext);
-
-  useEffect(() => {
-    if (selected) {
-      setFocused(null);
-    }
-  }, [selected]);
-
-  useEffect(() => {
-    if (isSelected) {
-      transformerRef.current.nodes([shapeRef.current]);
-      transformerRef.current.getLayer().batchDraw();
-    }
-  }, [isSelected]);
-
-  function handleTextDblClick(e) {
-    shapeRef.current.hide();
-    transformerRef.current.hide();
-
-    const textPosition = shapeRef.current.absolutePosition();
-
-    const areaPosition = {
-      x: stage.offsetX() + textPosition.x,
-      y: stage.offsetY() + textPosition.y,
-    };
-
-    const updatedDivProps = {
-      ...divProps,
-    };
-
-    // 원본 저장
-    setOriginProps(textareaProps);
-
-    const updatedTextareaProps = {
-      ...textareaProps,
-      style: {
-        ...textareaProps.style,
-      },
-    };
-
-    updatedDivProps.style.position = 'absolute';
-    updatedDivProps.style.display = 'block';
-
-    updatedDivProps.style.width = `${
-      shapeRef.current.width() - shapeRef.current.padding() * 2}px`;
-    updatedDivProps.style.height = `${
-      shapeRef.current.height() - shapeRef.current.padding() * 2 + 5}px`;
-
-    updatedDivProps.style.left = `${areaPosition.x}px`;
-    updatedDivProps.style.top = `${areaPosition.y}px`;
-
-    updatedTextareaProps.value = shapeRef.current.text();
-
-    updatedTextareaProps.style.border = 'none';
-    updatedTextareaProps.style.fontSize = `${shapeRef.current.fontSize()}px`;
-    updatedTextareaProps.style.padding = '0px';
-    updatedTextareaProps.style.margin = '0px';
-    updatedTextareaProps.style.overflow = 'hidden';
-    updatedTextareaProps.style.background = 'none';
-    updatedTextareaProps.style.outline = 'none';
-    updatedTextareaProps.style.resize = 'none';
-    updatedTextareaProps.style.lineHeight = shapeRef.current.lineHeight();
-    updatedTextareaProps.style.fontFamily = shapeRef.current.fontFamily();
-    updatedTextareaProps.style.transformOrigin = 'left top';
-    updatedTextareaProps.style.textAlign = shapeRef.current.align();
-    updatedTextareaProps.style.color = shapeRef.current.fill();
-
-    const rotation = shapeRef.current.rotation();
-    let transform = '';
-    if (rotation) {
-      transform += `rotateZ(${rotation}deg)`;
-    }
-
-    let px = 0;
-    const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
-    if (isFirefox) {
-      px += 2 + Math.round(shapeRef.current.fontSize() / 20);
-    }
-
-    transform += `translateY(-${px}px)`;
-
-    updatedTextareaProps.style.transform = transform;
-
-    // reset height
-    updatedTextareaProps.style.height = 'auto';
-    // after browsers resized it we can set actual value
-    updatedTextareaProps.style.height = `${
-      updatedTextareaProps.scrollHeight + 3}px`;
-
-    setDivProps(updatedDivProps);
-    setTextareaProps(updatedTextareaProps);
-
-    textareaRef.current.focus();
-  }
-
-  function setTextareaWidth(width) {
+  const getTextareaWidth = (width) => {
     let newWidth = width;
     if (!newWidth) {
       newWidth = shapeRef.current.text().length * shapeRef.current.fontSize();
@@ -197,13 +87,119 @@ const EditableText = ({
       newWidth += 1;
     }
 
-    setTextareaProps({
+    return newWidth;
+  };
+
+  useEffect(() => {
+    if (isSelected) {
+      transformerRef.current.nodes([shapeRef.current]);
+      transformerRef.current.getLayer().batchDraw();
+    }
+  }, [isSelected]);
+
+  useEffect(() => {
+    // 최초 렌더링
+    if (!created) {
+      setCreated(true);
+      return;
+    }
+
+    // 포커스가 외부 조건에 의해 해제될 때
+    if (focused === null) {
+      onTransform({
+        id,
+        text: textareaValue,
+        width: getTextareaWidth(shapeRef.current.width()),
+      });
+
+      setDivProps({
+        style: {
+          ...divProps.style,
+          display: 'none',
+        },
+      });
+
+      shapeRef.current.show();
+
+      if (isSelected) {
+        transformerRef.current.show();
+      }
+    }
+  }, [focused]);
+
+  function handleTextDblClick(e) {
+    shapeRef.current.hide();
+    transformerRef.current.hide();
+
+    const textPosition = shapeRef.current.absolutePosition();
+
+    const areaPosition = {
+      x: stage.offsetX() + textPosition.x,
+      y: stage.offsetY() + textPosition.y,
+    };
+
+    const updatedDivProps = {
+      ...divProps,
+    };
+
+    // 원본 저장
+    setOriginValue(textareaValue);
+
+    const updatedTextareaProps = {
       ...textareaProps,
       style: {
         ...textareaProps.style,
-        width: `${newWidth}px`,
       },
-    });
+    };
+
+    const getTransform = () => {
+      const rotation = shapeRef.current.rotation();
+
+      let transform = '';
+      if (rotation) {
+        transform += `rotateZ(${rotation}deg)`;
+      }
+
+      let px = 0;
+
+      const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox')
+        > -1;
+      if (isFirefox) {
+        px += 2 + Math.round(shapeRef.current.fontSize() / 20);
+      }
+
+      transform += `translateY(-${px}px)`;
+
+      return transform;
+    };
+
+    updatedDivProps.style = {
+      ...divProps.style,
+      width: `${shapeRef.current.width()
+        - shapeRef.current.padding() * 2}px`,
+      height: `${shapeRef.current.height()
+        - shapeRef.current.padding() * 2 + 5}px`,
+      position: 'absolute',
+      display: 'block',
+      left: `${areaPosition.x}px`,
+      top: `${areaPosition.y}px`,
+    };
+
+    updatedTextareaProps.style = {
+      ...textareaProps.style,
+      fontSize: `${shapeRef.current.fontSize()}px`,
+      lineHeight: shapeRef.current.lineHeight(),
+      fontFamily: shapeRef.current.fontFamily(),
+      textAlign: shapeRef.current.align(),
+      color: shapeRef.current.fill(),
+      transform: getTransform(),
+    };
+
+    setDivProps(updatedDivProps);
+    setTextareaProps(updatedTextareaProps);
+    setTextareaValue(shapeRef.current.text());
+
+    textareaRef.current.focus();
   }
 
   function removeTextarea() {
@@ -216,15 +212,45 @@ const EditableText = ({
     });
   }
 
+  const onChangeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    textareaRef.current.style.height = 'auto';
+    textareaRef.current.style.height = `${
+      textareaRef.current.scrollHeight + shapeRef.current.fontSize()
+    }px`;
+
+    setDivProps({
+      style: {
+        ...divProps.style,
+        height: `${
+          textareaRef.current.scrollHeight + shapeRef.current.fontSize()
+        }px`,
+      },
+    });
+
+    setTextareaValue(e.target.value);
+  };
+
+  useEffect(() => {
+    setDivProps({
+      style: {
+        ...divProps.style,
+        height: `${
+          textareaRef.current.scrollHeight + shapeRef.current.fontSize()
+        }px`,
+      },
+    });
+  }, [textareaValue]);
+
   return (
     <>
       <Text
         {...props}
+        text={text}
+        id={id}
         ref={shapeRef}
         draggable
-        wrap="word"
         onDblClick={(e) => {
-          setFocused(props.id);
+          setFocused(id);
           handleTextDblClick(e);
         }}
         onClick={onClick}
@@ -237,7 +263,15 @@ const EditableText = ({
             width: node.width() * node.scaleX(),
           });
         }}
+        onKeyDown={(e) => {
+          if (e.keyCode === 13) {
+            setFocused(id);
+            handleTextDblClick(e);
+          }
+        }}
         onTransformEnd={(e) => {
+          console.log('e :>> ', e);
+
           const node = shapeRef.current;
           const scaleX = node.scaleX();
           const scaleY = node.scaleY();
@@ -271,52 +305,38 @@ const EditableText = ({
       >
         <textarea
           ref={textareaRef}
-          value={textareaProps.value}
-          onChange={(e) => {
-            console.log(e.target.value);
-            setTextareaProps({
-              ...textareaProps,
-              value: e.target.value,
-            });
-          }}
+          value={textareaValue}
+          style={textareaProps.style}
+          onChange={onChangeHandler}
           onKeyDown={(e) => {
-            const scale = shapeRef.current.getAbsoluteScale().x;
-            setTextareaWidth(shapeRef.current.width() * scale);
-            setTextareaProps({
-              ...textareaProps,
-              style: {
-                ...textareaProps.style,
-                height: 'auto',
-              },
-            });
-            setTextareaProps({
-              ...textareaProps,
-              style: {
-                ...textareaProps.style,
-                height: `${
-                  textareaRef.current.scrollHeight + shapeRef.current.fontSize()
-                }px`,
-              },
-            });
-          }}
-          onKeyPress={(e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-              onTransform({
-                id,
-                text: textareaProps.value,
-              });
+            if (e.keyCode === 13 && !e.shiftKey) {
+              // 값 다를 때만 저장
+              if (originValue !== textareaValue) {
+                onTransform({
+                  id,
+                  text: textareaValue,
+                  width: getTextareaWidth(shapeRef.current.width()),
+                });
+              }
               removeTextarea();
-              shapeRef.current.show();
+              unfocus();
+
+              // shapeRef.current.show();
+              // 바깥 눌렀을 떄 Selected 해제애햐 앟
+              // transformerRef?.current.show();
             }
             // TODO: 나중에 키바인딩 라이브러리 쓰기
-            if (e.key === 'Esc') {
+            if (e.keyCode === 27) {
               setTextareaProps({
-                ...originProps,
+                ...textareaProps,
               });
+              setTextareaValue(originValue);
+              removeTextarea();
+              unfocus();
               shapeRef.current.show();
+              // transformerRef.current.show();
             }
           }}
-          {...textareaProps}
         />
       </Html>
 
