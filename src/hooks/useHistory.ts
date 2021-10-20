@@ -6,8 +6,6 @@ const useHistory = () => {
   const [historyIndex, setHistoryIndex] = useState<number>(0);
 
   const saveHistory = (state: ShapesHistory) => {
-    console.log('SaveHistorySTart');
-
     setHistory([...history.slice(0, historyIndex + 1), state]);
 
     setHistoryIndex(historyIndex + 1);
