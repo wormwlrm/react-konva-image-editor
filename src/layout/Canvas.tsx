@@ -19,10 +19,6 @@ const Canvas = ({
     width: WindowSize['width'];
     height: WindowSize['height'];
 }) => {
-  const size: WindowSize = useResizer({
-    width, height,
-  });
-
   const {
     setSelected,
     onDragStart,
@@ -45,8 +41,8 @@ const Canvas = ({
         // TODO: 키보드 이벤트 리스닝하게 하기
         <Stage
           ref={stage}
-          width={size.width}
-          height={size.height}
+          width={width}
+          height={height}
           onMouseDown={(e) => {
             unselect(e);
             unfocus(e);

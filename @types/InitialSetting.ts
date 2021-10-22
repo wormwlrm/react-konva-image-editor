@@ -3,4 +3,6 @@ export interface InitialSetting {
   height?: number;
   maxWidth?: number;
   maxHeight?: number;
+  responsive?: boolean;
+  aspectRatio?: number;
 }
