@@ -37,7 +37,17 @@ export const Editor = ({
       <HistoryProvider>
         <ShapesProvider>
           <Toolbar />
-          <Canvas width={size.width} height={size.height} />
+          <div
+            style={{
+              width: `calc(${size.width - 22}px)`,
+              height: `calc(${size.height - 22}px)`,
+              overflow: 'auto',
+              margin: '10px',
+              border: '1px solid grey',
+            }}
+          >
+            <Canvas width={size.width} height={size.height} />
+          </div>
         </ShapesProvider>
       </HistoryProvider>
     </div>

@@ -41,8 +41,9 @@ const Canvas = ({
         // TODO: 키보드 이벤트 리스닝하게 하기
         <Stage
           ref={stage}
-          width={width}
-          height={height}
+          // TODO: 캔버스 크기를 이미지 기반으로 조절 가능하게
+          width={width + 500 * 2}
+          height={height + 500 * 2}
           onMouseDown={(e) => {
             unselect(e);
             unfocus(e);
