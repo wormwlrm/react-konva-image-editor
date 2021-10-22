@@ -106,11 +106,13 @@ const EditableText = ({
 
     // 포커스가 외부 조건에 의해 해제될 때
     if (focused === null) {
-      onTransform({
-        id,
-        text: textareaValue,
-        width: getTextareaWidth(shapeRef.current.width()),
-      });
+      if (originValue !== textareaValue) {
+        onTransform({
+          id,
+          text: textareaValue,
+          width: getTextareaWidth(shapeRef.current.width()),
+        });
+      }
 
       setDivProps({
         style: {
@@ -311,6 +313,7 @@ const EditableText = ({
           onKeyDown={(e) => {
             if (e.keyCode === 13 && !e.shiftKey) {
               // 값 다를 때만 저장
+              console.log(originValue !== textareaValue);
               if (originValue !== textareaValue) {
                 onTransform({
                   id,

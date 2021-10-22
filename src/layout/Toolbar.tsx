@@ -9,7 +9,9 @@ export const Toolbar = () => {
     redo, undo, canRedo, canUndo,
   } = useContext(HistoryContext);
 
-  const { addShape, setSelected } = useContext(ShapesContext);
+  const {
+    addShape, setSelected, unselect, unfocus,
+  } = useContext(ShapesContext);
 
   const handleAdd = (type: string) => {
     const shape = addShape({ type });
@@ -40,14 +42,22 @@ export const Toolbar = () => {
       <button
         type="button"
         disabled={!canUndo}
-        onClick={undo}
+        onClick={() => {
+          unselect();
+          unfocus();
+          undo();
+        }}
       >
         Undo
       </button>
       <button
         type="button"
         disabled={!canRedo}
-        onClick={redo}
+        onClick={() => {
+          unselect();
+          unfocus();
+          redo();
+        }}
       >
         Redo
       </button>
