@@ -30,6 +30,8 @@ export const TransformableCircle = ({
     }
   }, [isSelected]);
 
+  const snaps = Array(24).fill(0).map((_, i) => i * 15);
+
   return (
     <>
       <Ellipse
@@ -61,6 +63,9 @@ export const TransformableCircle = ({
         <Portal selector=".top-layer" enabled={isSelected}>
           <Transformer
             ref={transformerRef}
+            // TODO: 키 리스닝하게 하기
+            rotationSnaps={snaps}
+            rotationSnapTolerance={15 / 2}
           />
         </Portal>
       )}
