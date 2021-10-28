@@ -31,6 +31,7 @@ const Canvas = ({
     selected,
     unfocus,
     setFocused,
+    zoom,
   } = useShapesContext();
 
   const stage = useRef<Konva.Stage>();
@@ -42,13 +43,21 @@ const Canvas = ({
         <Stage
           ref={stage}
           // TODO: 캔버스 크기를 이미지 기반으로 조절 가능하게
-          width={width + 500 * 2}
-          height={height + 500 * 2}
+          width={width * zoom}
+          height={height * zoom}
           onMouseDown={(e) => {
             unselect(e);
             unfocus(e);
           }}
+          scaleX={zoom}
+          scaleY={zoom}
           onTouchStart={unselect}
+          style={{
+            display: 'inline-block',
+            backgroundColor: 'white',
+            verticalAlign: 'middle',
+          }}
+
         >
           <ShapesContext.Provider value={value}>
             <Layer>

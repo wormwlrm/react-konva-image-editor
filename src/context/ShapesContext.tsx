@@ -1,7 +1,9 @@
 import React, { createContext, ReactNode } from 'react';
 import Konva from 'konva';
 
-import { useDraggable, useShapes, useFocusable } from '@/hooks';
+import {
+  useDraggable, useShapes, useFocusable, useZoom
+} from '@/hooks';
 
 interface IShapesContext {
   shapes: Konva.ShapeConfig[];
@@ -19,7 +21,13 @@ interface IShapesContext {
 
   circles: (Konva.EllipseConfig& {id: string})[];
   rectangles: (Konva.RectConfig& {id: string})[];
-  texts: (Konva.TextConfig& {id: string})[] ;
+  texts: (Konva.TextConfig& {id: string})[];
+
+  zoom: number;
+  canZoomIn: boolean;
+  canZoomOut: boolean;
+  zoomIn: (e?) => void;
+  zoomOut: (e?) => void;
 }
 
 const defaultValue = {
@@ -37,6 +45,12 @@ const defaultValue = {
   circles: [],
   rectangles: [],
   texts: [],
+
+  zoom: 5,
+  canZoomIn: true,
+  canZoomOut: true,
+  zoomIn: () => {},
+  zoomOut: () => {},
 };
 
 const ShapesContext = createContext<IShapesContext>(defaultValue);
@@ -56,6 +70,10 @@ const ShapesProvider = ({ children }: {
 
   const { focused, setFocused, unfocus } = useFocusable();
 
+  const {
+    zoom, canZoomIn, canZoomOut, zoomIn, zoomOut,
+  } = useZoom();
+
   const initialState: IShapesContext = {
     shapes,
     selected,
@@ -72,6 +90,12 @@ const ShapesProvider = ({ children }: {
     circles,
     rectangles,
     texts,
+
+    zoom,
+    canZoomIn,
+    canZoomOut,
+    zoomIn,
+    zoomOut,
   };
 
   return (

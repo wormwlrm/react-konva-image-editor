@@ -10,7 +10,9 @@ export const Toolbar = () => {
   } = useContext(HistoryContext);
 
   const {
-    addShape, setSelected, unselect, unfocus,
+    addShape, setSelected,
+    unselect, unfocus, zoomIn, zoomOut,
+    canZoomIn, canZoomOut,
   } = useContext(ShapesContext);
 
   const handleAdd = (type: string) => {
@@ -60,6 +62,24 @@ export const Toolbar = () => {
         }}
       >
         Redo
+      </button>
+      <button
+        type="button"
+        disabled={!canZoomIn}
+        onClick={() => {
+          zoomIn();
+        }}
+      >
+        zoom in
+      </button>
+      <button
+        type="button"
+        disabled={!canZoomOut}
+        onClick={() => {
+          zoomOut();
+        }}
+      >
+        zoom out
       </button>
     </div>
   );

@@ -44,6 +44,7 @@ const EditableText = ({
 
   const [textareaProps, setTextareaProps] = useState<any>({
     style: {
+      display: 'block',
       border: 'none',
       padding: '0px',
       margin: '0px',

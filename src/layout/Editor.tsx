@@ -24,7 +24,6 @@ export const Editor = ({
   });
 
   return (
-
     <div
       className="react-konva-image-editor"
       ref={wrapperRef}
@@ -39,11 +38,15 @@ export const Editor = ({
           <Toolbar />
           <div
             style={{
-              width: `calc(${size.width - 22}px)`,
-              height: `calc(${size.height - 22}px)`,
+              width: `${size.width - 22}px`,
+              height: `${size.height - 22}px`,
+              lineHeight: `${size.height - 22}px`,
               overflow: 'auto',
               margin: '10px',
               border: '1px solid grey',
+              backgroundColor: 'lightgrey',
+              textAlign: 'center',
+              boxSizing: 'border-box',
             }}
           >
             <Canvas width={size.width} height={size.height} />
