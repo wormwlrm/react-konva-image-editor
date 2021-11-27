@@ -1,8 +1,12 @@
 import Konva from 'konva';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, {
+  useContext, useEffect, useMemo,
+  useState
+} from 'react';
 import { EllipseConfig } from 'konva/lib/shapes/Ellipse';
 import { RectConfig } from 'konva/lib/shapes/Rect';
 import { TextConfig } from 'konva/lib/shapes/Text';
+import { LineConfig } from 'konva/lib/shapes/Line';
 
 import { useIdCounter } from './useIdCounter';
 
@@ -90,6 +94,13 @@ export function useShapes() {
         };
         break;
 
+      case 'line':
+        created = {
+          ...created,
+          ...shape,
+        };
+        break;
+
       default:
         break;
     }
@@ -131,11 +142,20 @@ export function useShapes() {
     [shapes]
   );
 
+  const lines: (LineConfig & { id: string })[] = useMemo(
+    () =>
+      shapes.filter((shape) => shape.type === 'line') as (LineConfig & {
+        id: string;
+      })[],
+    [shapes]
+  );
+
   return {
     shapes,
     circles,
     rectangles,
     texts,
+    lines,
 
     setShapes,
     updateShape,

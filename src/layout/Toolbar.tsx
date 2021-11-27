@@ -10,9 +10,12 @@ export const Toolbar = () => {
   } = useContext(HistoryContext);
 
   const {
+    mode,
     addShape, setSelected,
     unselect, unfocus, zoomIn, zoomOut,
     canZoomIn, canZoomOut,
+    // setModeToPen, setModeToEraser,
+    setWillDrawing,
   } = useContext(ShapesContext);
 
   const handleAdd = (type: string) => {
@@ -63,6 +66,30 @@ export const Toolbar = () => {
       >
         Redo
       </button>
+      <button
+        type="button"
+        onClick={() => {
+          unselect();
+          unfocus();
+          setWillDrawing(true);
+        }}
+      >
+        Drawing Tool (Mode:
+        {` ${mode}`}
+        )
+      </button>
+      {/* <button
+        type="button"
+        onClick={() => {
+          if (mode === 'pen') {
+            setModeToEraser();
+          } else {
+            setModeToPen();
+          }
+        }}
+      >
+        Toggle Mode
+      </button> */}
       <button
         type="button"
         disabled={!canZoomIn}

@@ -2,7 +2,7 @@ import React, { createContext, ReactNode } from 'react';
 import Konva from 'konva';
 
 import {
-  useDraggable, useShapes, useFocusable, useZoom
+  useDraggable, useShapes, useFocusable, useZoom, useDrawing
 } from '@/hooks';
 
 interface IShapesContext {
@@ -22,12 +22,25 @@ interface IShapesContext {
   circles: (Konva.EllipseConfig& {id: string})[];
   rectangles: (Konva.RectConfig& {id: string})[];
   texts: (Konva.TextConfig& {id: string})[];
+  lines: (Konva.LineConfig& {id: string})[];
 
   zoom: number;
   canZoomIn: boolean;
   canZoomOut: boolean;
   zoomIn: (e?) => void;
   zoomOut: (e?) => void;
+
+  // setModeToEraser: () => void;
+  // setModeToPen: () => void;
+  drawing: boolean;
+  mode: string;
+  setDrawing: (drawing: boolean) => void;
+  willDrawing: boolean;
+  setWillDrawing: (willDrawing: boolean) => void;
+  onDrawStart: (e: Konva.KonvaEventObject<MouseEvent>) => void;
+  onDrawEnd: (e: Konva.KonvaEventObject<MouseEvent>) => void;
+  onDrawing: (e: Konva.KonvaEventObject<MouseEvent>) => void;
+  points: Konva.LineConfig['points'];
 }
 
 const defaultValue = {
@@ -45,12 +58,25 @@ const defaultValue = {
   circles: [],
   rectangles: [],
   texts: [],
+  lines: [],
 
   zoom: 5,
   canZoomIn: true,
   canZoomOut: true,
   zoomIn: () => {},
   zoomOut: () => {},
+
+  setModeToEraser: () => {},
+  setModeToPen: () => {},
+  drawing: false,
+  mode: 'pen',
+  setDrawing: () => {},
+  willDrawing: false,
+  setWillDrawing: () => {},
+  onDrawStart: () => {},
+  onDrawing: () => {},
+  onDrawEnd: () => {},
+  points: [],
 };
 
 const ShapesContext = createContext<IShapesContext>(defaultValue);
@@ -59,7 +85,7 @@ const ShapesProvider = ({ children }: {
   children: ReactNode,
 }) => {
   const {
-    shapes, circles, rectangles, texts, updateShape, addShape,
+    shapes, circles, rectangles, texts, lines, updateShape, addShape,
   } = useShapes();
 
   const {
@@ -73,6 +99,15 @@ const ShapesProvider = ({ children }: {
   const {
     zoom, canZoomIn, canZoomOut, zoomIn, zoomOut,
   } = useZoom();
+
+  const {
+    // setModeToEraser, setModeToPen,
+    drawing, mode, setDrawing,
+    onDrawStart, onDrawing, onDrawEnd, points,
+    willDrawing, setWillDrawing,
+  } = useDrawing({
+    addShape, setSelected,
+  });
 
   const initialState: IShapesContext = {
     shapes,
@@ -90,12 +125,25 @@ const ShapesProvider = ({ children }: {
     circles,
     rectangles,
     texts,
+    lines,
 
     zoom,
     canZoomIn,
     canZoomOut,
     zoomIn,
     zoomOut,
+
+    // setModeToEraser,
+    // setModeToPen,
+    setDrawing,
+    drawing,
+    mode,
+    points,
+    willDrawing,
+    setWillDrawing,
+    onDrawEnd,
+    onDrawStart,
+    onDrawing,
   };
 
   return (
