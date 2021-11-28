@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Rect, Transformer } from 'react-konva';
 import { Portal } from 'react-konva-utils';
 import Konva from 'konva';
@@ -27,6 +27,10 @@ export const TransformableRect = ({
       transformerRef.current.getLayer().batchDraw();
     }
   }, [isSelected]);
+
+  useEffect(() => {
+    rectRef.current.cache();
+  }, [isSelected, props]);
 
   return (
     <>

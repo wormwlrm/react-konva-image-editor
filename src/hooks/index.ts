@@ -7,3 +7,4 @@ export * from './useHistory';
 export * from './useZoom';
 export * from './useShapesContext';
 export * from './useDrawing';
+export * from './useFilter';

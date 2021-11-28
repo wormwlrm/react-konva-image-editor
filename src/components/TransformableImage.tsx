@@ -25,7 +25,6 @@ export const TransformableImage = ({
 }) => {
   const imageRef = useRef<Konva.Image>();
   const transformerRef = useRef<Konva.Transformer>();
-  const ratio = maxWidth / (src.width as number);
 
   useEffect(() => {
     if (isSelected) {
@@ -33,6 +32,10 @@ export const TransformableImage = ({
       transformerRef.current.getLayer().batchDraw();
     }
   }, [isSelected]);
+
+  useEffect(() => {
+    imageRef.current.cache();
+  }, [isSelected, props]);
 
   return (
     <>

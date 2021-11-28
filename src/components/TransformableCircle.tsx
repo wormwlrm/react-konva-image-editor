@@ -30,6 +30,10 @@ export const TransformableCircle = ({
     }
   }, [isSelected]);
 
+  useEffect(() => {
+    circleRef.current.cache();
+  }, [isSelected, props]);
+
   const snaps = Array(24).fill(0).map((_, i) => i * 15);
 
   return (

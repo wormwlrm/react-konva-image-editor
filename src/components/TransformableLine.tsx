@@ -32,6 +32,10 @@ export const TransformableLine = ({
     }
   }, [isSelected]);
 
+  useEffect(() => {
+    lineRef.current.cache();
+  }, [isSelected, props]);
+
   return (
     <>
       <Line

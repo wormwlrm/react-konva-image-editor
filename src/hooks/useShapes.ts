@@ -18,8 +18,15 @@ export function useShapes() {
     index: historyIndex,
   } = useContext(HistoryContext);
 
+  const getShapeById = (id: string) => shapes.find((shape) => shape.id === id);
+
   const updateShape = <T extends Konva.ShapeConfig>(
-    config: T & { id: string }
+    config: T & { id: string },
+    options: {
+      saveHistory: boolean;
+    } = {
+      saveHistory: true,
+    }
   ) => {
     const updated = shapes.map((shape) => {
       if (shape.id === config.id) {
@@ -31,10 +38,11 @@ export function useShapes() {
       return shape;
     });
 
-    console.log('updateShape');
-
     setShapes(updated);
-    saveHistory(updated);
+
+    if (options.saveHistory) {
+      saveHistory(updated);
+    }
 
     return updated;
   };
@@ -43,6 +51,10 @@ export function useShapes() {
     let created: Konva.ShapeConfig = {
       id: generateId(),
       draggable: true,
+      shadowBlur: 0,
+      brightness: 0,
+      blur: 0,
+      filters: [Konva.Filters.Blur, Konva.Filters.Brighten],
     };
 
     switch (shape.type) {
@@ -136,6 +148,8 @@ export function useShapes() {
 
   return {
     shapes,
+
+    getShapeById,
 
     setShapes,
     updateShape,

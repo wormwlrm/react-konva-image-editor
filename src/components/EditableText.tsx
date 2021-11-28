@@ -99,6 +99,10 @@ const EditableText = ({
   }, [isSelected]);
 
   useEffect(() => {
+    shapeRef.current.cache();
+  }, [isSelected, props]);
+
+  useEffect(() => {
     // 최초 렌더링
     if (!created) {
       setCreated(true);
@@ -176,6 +180,8 @@ const EditableText = ({
       return transform;
     };
 
+    console.log(shapeRef.current.brightness());
+
     updatedDivProps.style = {
       ...divProps.style,
       width: `${shapeRef.current.width()
@@ -186,6 +192,7 @@ const EditableText = ({
       display: 'block',
       left: `${areaPosition.x}px`,
       top: `${areaPosition.y}px`,
+      filter: `brightness(${(shapeRef.current.brightness() + 1)})`,
     };
 
     updatedTextareaProps.style = {

@@ -10,9 +10,12 @@ interface IShapesContext {
   selected: null | string;
   focused: null | string;
   draggable: boolean;
+  getShapeById: (id: string) => Konva.ShapeConfig | undefined;
   setDraggable: (draggable: boolean) => void;
-  updateShape: <T extends Konva.ShapeConfig>(config: T & { id: string; })
-    => Konva.ShapeConfig[];
+  updateShape: <T extends Konva.ShapeConfig>(
+    config: T & { id: string; },
+    options?: { saveHistory: boolean }
+  ) => Konva.ShapeConfig[];
   addShape: (config: Konva.ShapeConfig) => Konva.ShapeConfig;
   onDragStart: (e, shape: Konva.ShapeConfig) => void;
   onDragEnd: (e: Konva.KonvaEventObject<DragEvent>) => void;
@@ -57,6 +60,7 @@ const defaultValue = {
   setFocused: () => {},
   draggable: false,
   setDraggable: () => {},
+  getShapeById: () => undefined,
 
   toForward: () => {},
   toBackward: () => {},
@@ -86,7 +90,7 @@ const ShapesProvider = ({ children }: {
   children: ReactNode,
 }) => {
   const {
-    shapes, updateShape, addShape, toForward, toBackward,
+    shapes, updateShape, addShape, toForward, toBackward, getShapeById,
   } = useShapes();
 
   const {
@@ -125,6 +129,7 @@ const ShapesProvider = ({ children }: {
     unselect,
     unfocus,
     setSelected,
+    getShapeById,
 
     toForward,
     toBackward,
