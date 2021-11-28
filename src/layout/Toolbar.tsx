@@ -11,11 +11,12 @@ export const Toolbar = () => {
   } = useContext(HistoryContext);
 
   const {
-    mode,
+    mode, selected,
     addShape, setSelected,
     unselect, unfocus, zoomIn, zoomOut,
     canZoomIn, canZoomOut,
     // setModeToPen, setModeToEraser,
+    toForward, toBackward,
     setWillDrawing,
   } = useContext(ShapesContext);
 
@@ -127,6 +128,24 @@ export const Toolbar = () => {
         }}
       >
         zoom out
+      </button>
+      <button
+        type="button"
+        disabled={!selected}
+        onClick={() => {
+          toForward(selected);
+        }}
+      >
+        to forward
+      </button>
+      <button
+        type="button"
+        disabled={!selected}
+        onClick={() => {
+          toBackward(selected);
+        }}
+      >
+        to backward
       </button>
     </div>
   );

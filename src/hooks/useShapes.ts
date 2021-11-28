@@ -1,13 +1,7 @@
 import Konva from 'konva';
 import React, {
-  useContext, useEffect, useMemo,
-  useState
+  useContext, useEffect, useState
 } from 'react';
-import { EllipseConfig } from 'konva/lib/shapes/Ellipse';
-import { RectConfig } from 'konva/lib/shapes/Rect';
-import { TextConfig } from 'konva/lib/shapes/Text';
-import { LineConfig } from 'konva/lib/shapes/Line';
-import { ImageConfig } from 'konva/lib/shapes/Image';
 
 import { useIdCounter } from './useIdCounter';
 
@@ -128,56 +122,26 @@ export function useShapes() {
     setShapes(history[historyIndex]);
   }, [historyIndex]);
 
-  const circles: (EllipseConfig & { id: string })[] = useMemo(
-    () =>
-      shapes.filter((shape) => shape.type === 'ellipse') as (EllipseConfig & {
-        id: string;
-      })[],
-    [shapes]
-  );
+  const toForward = (id: string) => {
+    const shape = shapes.find((item) => item.id === id);
+    if (!shape) return;
+    setShapes(shapes.filter((item) => item.id !== id).concat([shape]));
+  };
 
-  const rectangles: (RectConfig & { id: string })[] = useMemo(
-    () =>
-      shapes.filter((shape) => shape.type === 'rectangle') as (RectConfig & {
-        id: string;
-      })[],
-    [shapes]
-  );
-
-  const texts: (TextConfig & { id: string })[] = useMemo(
-    () =>
-      shapes.filter((shape) => shape.type === 'text') as (TextConfig & {
-        id: string;
-      })[],
-    [shapes]
-  );
-
-  const lines: (LineConfig & { id: string })[] = useMemo(
-    () =>
-      shapes.filter((shape) => shape.type === 'line') as (LineConfig & {
-        id: string;
-      })[],
-    [shapes]
-  );
-
-  const images: (Konva.ImageConfig & { id: string })[] = useMemo(
-    () =>
-      shapes.filter((shape) => shape.type === 'image') as (ImageConfig & {
-        id: string;
-      })[],
-    [shapes]
-  );
+  const toBackward = (id: string) => {
+    const shape = shapes.find((item) => item.id === id);
+    if (!shape) return;
+    setShapes([shape].concat(shapes.filter((item) => item.id !== id)));
+  };
 
   return {
     shapes,
-    circles,
-    rectangles,
-    texts,
-    lines,
-    images,
 
     setShapes,
     updateShape,
     addShape,
+
+    toForward,
+    toBackward,
   };
 }

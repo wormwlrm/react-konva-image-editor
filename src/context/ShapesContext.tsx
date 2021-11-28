@@ -21,11 +21,8 @@ interface IShapesContext {
   setSelected: (id: string) => void;
   setFocused: (id: string) => void;
 
-  circles: (Konva.EllipseConfig& {id: string})[];
-  rectangles: (Konva.RectConfig& {id: string})[];
-  texts: (Konva.TextConfig& {id: string})[];
-  lines: (Konva.LineConfig& {id: string})[];
-  images: (Konva.ImageConfig& {id: string})[];
+  toForward: (id: string) => void;
+  toBackward: (id: string) => void;
 
   zoom: number;
   canZoomIn: boolean;
@@ -60,11 +57,9 @@ const defaultValue = {
   setFocused: () => {},
   draggable: false,
   setDraggable: () => {},
-  circles: [],
-  rectangles: [],
-  texts: [],
-  lines: [],
-  images: [],
+
+  toForward: () => {},
+  toBackward: () => {},
 
   zoom: 5,
   canZoomIn: true,
@@ -91,7 +86,7 @@ const ShapesProvider = ({ children }: {
   children: ReactNode,
 }) => {
   const {
-    shapes, circles, rectangles, texts, lines, images, updateShape, addShape,
+    shapes, updateShape, addShape, toForward, toBackward,
   } = useShapes();
 
   const {
@@ -131,11 +126,8 @@ const ShapesProvider = ({ children }: {
     unfocus,
     setSelected,
 
-    circles,
-    rectangles,
-    texts,
-    lines,
-    images,
+    toForward,
+    toBackward,
 
     zoom,
     canZoomIn,

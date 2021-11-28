@@ -27,11 +27,7 @@ const Canvas = ({
     onDragEnd,
     updateShape,
     unselect,
-    circles,
-    rectangles,
-    texts,
-    lines,
-    images,
+    shapes,
 
     selected,
     unfocus,
@@ -101,93 +97,113 @@ const Canvas = ({
         >
           <ShapesContext.Provider value={value}>
             <Layer>
-              {images.map((shape) => (
-                <TransformableImage
-                  {...shape}
-                  draggable={draggable}
-                  key={shape.id}
-                  src={shape.image}
-                  maxWidth={width * 0.9}
-                  isSelected={selected === shape.id}
-                  onDragStart={(e) => onDragStart(e, shape)}
-                  onDragEnd={(e) => onDragEnd(e)}
-                  onClick={() => setSelected(shape.id)}
-                  onTransform={(updated) => updateShape({
-                    ...updated,
-                    id: shape.id,
-                  })}
-                />
-              ))}
-              {circles.map((shape) => (
-                <TransformableCircle
-                  {...shape}
-                  draggable={draggable}
-                  key={shape.id}
-                  radiusX={shape.radiusX}
-                  radiusY={shape.radiusY}
-                  isSelected={selected === shape.id}
-                  onClick={() => setSelected(shape.id)}
-                  onDragStart={(e) => onDragStart(e, shape)}
-                  onDragEnd={(e) => onDragEnd(e)}
-                  onTransform={(updated) => updateShape({
-                    ...updated,
-                    id: shape.id,
-                  })}
-                />
-              ))}
-              {rectangles.map((shape) => (
-                <TransformableRect
-                  {...shape}
-                  draggable={draggable}
-                  key={shape.id}
-                  isSelected={selected === shape.id}
-                  onDragStart={(e) => onDragStart(e, shape)}
-                  onDragEnd={(e) => onDragEnd(e)}
-                  onClick={() => setSelected(shape.id)}
-                  onTransform={(updated) => updateShape({
-                    ...updated,
-                    id: shape.id,
-                  })}
-                />
-              ))}
-              {texts.map((shape) => (
-                <EditableText
-                  {...shape}
-                  draggable={draggable}
-                  key={shape.id!}
-                  text={shape.text}
-                  stage={stage.current}
-                  isSelected={selected === shape.id}
-                  onDragStart={(e) => onDragStart(e, shape)}
-                  onDragEnd={(e) => onDragEnd(e)}
-                  onClick={() => setSelected(shape.id)}
-                  onTransform={(updated) => updateShape({
-                    ...updated,
-                    id: shape.id,
-                  })}
-                />
-              ))}
-              {lines.concat({
-                id: '-1',
-                points,
-                mode,
-              }).map((shape) => (
+              {shapes.map((shape) => {
+                switch (shape.type) {
+                  case 'rectangle':
+                    return (
+                      <TransformableRect
+                        {...shape}
+                        draggable={draggable}
+                        key={shape.id}
+                        isSelected={selected === shape.id}
+                        onDragStart={(e) => onDragStart(e, shape)}
+                        onDragEnd={(e) => onDragEnd(e)}
+                        onClick={() => setSelected(shape.id)}
+                        onTransform={(updated) => updateShape({
+                          ...updated,
+                          id: shape.id,
+                        })}
+                      />
+                    );
+                  case 'image':
+                    return (
+                      <TransformableImage
+                        {...shape}
+                        draggable={draggable}
+                        key={shape.id}
+                        src={shape.image}
+                        maxWidth={width * 0.9}
+                        isSelected={selected === shape.id}
+                        onDragStart={(e) => onDragStart(e, shape)}
+                        onDragEnd={(e) => onDragEnd(e)}
+                        onClick={() => setSelected(shape.id)}
+                        onTransform={(updated) => updateShape({
+                          ...updated,
+                          id: shape.id,
+                        })}
+                      />
+                    );
+                  case 'ellipse':
+                    return (
+                      <TransformableCircle
+                        {...shape}
+                        draggable={draggable}
+                        key={shape.id}
+                        radiusX={shape.radiusX}
+                        radiusY={shape.radiusY}
+                        isSelected={selected === shape.id}
+                        onClick={() => setSelected(shape.id)}
+                        onDragStart={(e) => onDragStart(e, shape)}
+                        onDragEnd={(e) => onDragEnd(e)}
+                        onTransform={(updated) => updateShape({
+                          ...updated,
+                          id: shape.id,
+                        })}
+                      />
+                    );
+                  case 'line':
+                    return (
+                      <TransformableLine
+                        {...shape}
+                        draggable={draggable}
+                        key={shape.id!}
+                        mode={shape.mode}
+                        points={shape.points}
+                        isSelected={selected === shape.id}
+                        onDragStart={(e) => onDragStart(e, shape)}
+                        onDragEnd={(e) => onDragEnd(e)}
+                        onClick={() => setSelected(shape.id)}
+                        onTransform={(updated) => updateShape({
+                          ...updated,
+                          id: shape.id,
+                        })}
+                      />
+                    );
+                  case 'text':
+                    return (
+                      <EditableText
+                        {...shape}
+                        draggable={draggable}
+                        id={shape.id}
+                        key={shape.id}
+                        text={shape.text}
+                        stage={stage.current}
+                        isSelected={selected === shape.id}
+                        onDragStart={(e) => onDragStart(e, shape)}
+                        onDragEnd={(e) => onDragEnd(e)}
+                        onClick={() => setSelected(shape.id)}
+                        onTransform={(updated) => updateShape({
+                          ...updated,
+                          id: shape.id,
+                        })}
+                      />
+                    );
+                  default:
+                    return null;
+                }
+              })}
+              {drawing && points.length > 0 ? (
                 <TransformableLine
-                  {...shape}
-                  draggable={draggable}
-                  key={shape.id!}
-                  mode={shape.mode}
-                  points={shape.points}
-                  isSelected={selected === shape.id}
-                  onDragStart={(e) => onDragStart(e, shape)}
-                  onDragEnd={(e) => onDragEnd(e)}
-                  onClick={() => setSelected(shape.id)}
-                  onTransform={(updated) => updateShape({
-                    ...updated,
-                    id: shape.id,
-                  })}
+                  mode={mode}
+                  points={points}
+                  isSelected={false}
+                  onDragStart={() => {}}
+                  onDragEnd={() => {}}
+                  onClick={() => {}}
+                  onTransform={() => {}}
                 />
-              ))}
+              )
+                : null}
             </Layer>
             <Layer name="top-layer" />
           </ShapesContext.Provider>
