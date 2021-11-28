@@ -2,6 +2,7 @@ import Konva from 'konva';
 import { useState } from 'react';
 
 export const useDraggable = ({ updateShape }) => {
+  const [draggable, setDraggable] = useState(true);
   const [selected, setSelected] = useState<null | string>(null);
 
   const unselect = (e?) => {
@@ -33,6 +34,9 @@ export const useDraggable = ({ updateShape }) => {
   };
 
   return {
+    draggable,
+    setDraggable,
+
     selected,
     setSelected,
     unselect,

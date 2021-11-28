@@ -36,12 +36,11 @@ export const TransformableLine = ({
     <>
       <Line
         ref={lineRef}
+        {...props}
         onClick={onClick}
         onDragStart={onDragStart}
         onDragEnd={(e) => onDragEnd(e)}
         points={points}
-        draggable
-        {...props}
         stroke="#df4b26"
         strokeWidth={5}
         tension={0.5}

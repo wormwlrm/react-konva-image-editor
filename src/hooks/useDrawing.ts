@@ -28,6 +28,7 @@ export const useDrawing = ({ addShape, setSelected }) => {
   };
 
   const onDrawing = (e: Konva.KonvaEventObject<DragEvent>) => {
+    console.log('drawing');
     if (!drawing) {
       return;
     }

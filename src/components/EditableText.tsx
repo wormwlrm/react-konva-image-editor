@@ -256,7 +256,6 @@ const EditableText = ({
         text={text}
         id={id}
         ref={shapeRef}
-        draggable
         onDblClick={(e) => {
           setFocused(id);
           handleTextDblClick(e);

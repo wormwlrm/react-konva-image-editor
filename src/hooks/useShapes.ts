@@ -7,6 +7,7 @@ import { EllipseConfig } from 'konva/lib/shapes/Ellipse';
 import { RectConfig } from 'konva/lib/shapes/Rect';
 import { TextConfig } from 'konva/lib/shapes/Text';
 import { LineConfig } from 'konva/lib/shapes/Line';
+import { ImageConfig } from 'konva/lib/shapes/Image';
 
 import { useIdCounter } from './useIdCounter';
 
@@ -101,6 +102,15 @@ export function useShapes() {
         };
         break;
 
+      case 'image':
+        created = {
+          ...created,
+          y: Math.random() * 100,
+          x: Math.random() * 100,
+          ...shape,
+        };
+        break;
+
       default:
         break;
     }
@@ -150,12 +160,21 @@ export function useShapes() {
     [shapes]
   );
 
+  const images: (Konva.ImageConfig & { id: string })[] = useMemo(
+    () =>
+      shapes.filter((shape) => shape.type === 'image') as (ImageConfig & {
+        id: string;
+      })[],
+    [shapes]
+  );
+
   return {
     shapes,
     circles,
     rectangles,
     texts,
     lines,
+    images,
 
     setShapes,
     updateShape,

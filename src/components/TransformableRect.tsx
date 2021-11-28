@@ -34,7 +34,6 @@ export const TransformableRect = ({
         onClick={onClick}
         ref={rectRef}
         {...props}
-        draggable
         onDragStart={onDragStart}
         onDragEnd={(e) => onDragEnd(e)}
         onTransformEnd={() => {

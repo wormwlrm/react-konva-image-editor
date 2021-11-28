@@ -61,7 +61,9 @@
   },
   "dependencies": {
     "konva": "^8.2.2",
+    "react-dropzone": "^11.4.2",
     "react-konva": "^17.0.2-5",
-    "react-konva-utils": "^0.2.0"
+    "react-konva-utils": "^0.2.0",
+    "use-image": "^1.0.8"
   }
 }

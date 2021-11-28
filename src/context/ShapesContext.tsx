@@ -9,6 +9,8 @@ interface IShapesContext {
   shapes: Konva.ShapeConfig[];
   selected: null | string;
   focused: null | string;
+  draggable: boolean;
+  setDraggable: (draggable: boolean) => void;
   updateShape: <T extends Konva.ShapeConfig>(config: T & { id: string; })
     => Konva.ShapeConfig[];
   addShape: (config: Konva.ShapeConfig) => Konva.ShapeConfig;
@@ -23,6 +25,7 @@ interface IShapesContext {
   rectangles: (Konva.RectConfig& {id: string})[];
   texts: (Konva.TextConfig& {id: string})[];
   lines: (Konva.LineConfig& {id: string})[];
+  images: (Konva.ImageConfig& {id: string})[];
 
   zoom: number;
   canZoomIn: boolean;
@@ -55,10 +58,13 @@ const defaultValue = {
   unfocus: () => { },
   setSelected: () => { },
   setFocused: () => {},
+  draggable: false,
+  setDraggable: () => {},
   circles: [],
   rectangles: [],
   texts: [],
   lines: [],
+  images: [],
 
   zoom: 5,
   canZoomIn: true,
@@ -85,11 +91,12 @@ const ShapesProvider = ({ children }: {
   children: ReactNode,
 }) => {
   const {
-    shapes, circles, rectangles, texts, lines, updateShape, addShape,
+    shapes, circles, rectangles, texts, lines, images, updateShape, addShape,
   } = useShapes();
 
   const {
     selected, onDragStart, onDragEnd, unselect, setSelected,
+    draggable, setDraggable,
   } = useDraggable({
     updateShape,
   });
@@ -118,6 +125,8 @@ const ShapesProvider = ({ children }: {
     addShape,
     onDragStart,
     onDragEnd,
+    draggable,
+    setDraggable,
     unselect,
     unfocus,
     setSelected,
@@ -126,6 +135,7 @@ const ShapesProvider = ({ children }: {
     rectangles,
     texts,
     lines,
+    images,
 
     zoom,
     canZoomIn,

@@ -3,6 +3,7 @@ import React, { useContext } from 'react';
 
 import { HistoryContext } from '@/context';
 import { ShapesContext } from '@/context/ShapesContext';
+import { DropImage } from '@/components';
 
 export const Toolbar = () => {
   const {
@@ -18,8 +19,8 @@ export const Toolbar = () => {
     setWillDrawing,
   } = useContext(ShapesContext);
 
-  const handleAdd = (type: string) => {
-    const shape = addShape({ type });
+  const handleAddShape = (configs: {[key: string]: any}) => {
+    const shape = addShape({ ...configs });
     setSelected(shape.id);
   };
 
@@ -28,19 +29,25 @@ export const Toolbar = () => {
       <h1>Toolbar</h1>
       <button
         type="button"
-        onClick={() => handleAdd('ellipse')}
+        onClick={() => handleAddShape({
+          type: 'ellipse',
+        })}
       >
         Add Circle
       </button>
       <button
         type="button"
-        onClick={() => handleAdd('rect')}
+        onClick={() => handleAddShape({
+          type: 'rect',
+        })}
       >
         Add Rect
       </button>
       <button
         type="button"
-        onClick={() => handleAdd('text')}
+        onClick={() => handleAddShape({
+          type: 'text',
+        })}
       >
         Add Text
       </button>
@@ -90,6 +97,19 @@ export const Toolbar = () => {
       >
         Toggle Mode
       </button> */}
+
+      <button type="button">
+        <DropImage
+          onBase64ImageLoaded={(image) => {
+            handleAddShape({
+              type: 'image',
+              image,
+            });
+          }}
+        >
+          Add Image
+        </DropImage>
+      </button>
       <button
         type="button"
         disabled={!canZoomIn}

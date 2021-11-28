@@ -10,10 +10,10 @@ import {
   TransformableRect
 } from '@/components';
 import {
-  useDrawing,
-  useResizer, useShapesContext, WindowSize
+  useShapesContext, WindowSize
 } from '@/hooks';
 import { ShapesConsumer, ShapesContext, ShapesProvider } from '@/context';
+import { TransformableImage } from '@/components/TransformableImage';
 
 const Canvas = ({
   width, height,
@@ -31,6 +31,8 @@ const Canvas = ({
     rectangles,
     texts,
     lines,
+    images,
+
     selected,
     unfocus,
     setFocused,
@@ -38,13 +40,14 @@ const Canvas = ({
     willDrawing,
     drawing,
 
-    setDrawing,
-    setWillDrawing,
     onDrawStart,
     onDrawing,
     onDrawEnd,
     points,
     mode,
+
+    draggable,
+    setDraggable,
   } = useShapesContext();
 
   const stage = useRef<Konva.Stage>();
@@ -60,8 +63,11 @@ const Canvas = ({
           height={height * zoom}
           onMouseDown={(e) => {
             if (willDrawing) {
+              setDraggable(false);
               onDrawStart(e);
+              console.log('willDraw');
             } else {
+              console.log('NotwillDraw');
               unselect(e);
               unfocus(e);
             }
@@ -69,14 +75,15 @@ const Canvas = ({
           onMouseMove={(e) => {
             if (drawing) {
               onDrawing(e);
-              console.log('2 :>> ', 2);
-            } else {
-              console.log('3 :>> ', 3);
+              unselect(e);
+              unfocus(e);
             }
           }}
           onMouseUp={(e) => {
             if (drawing) {
               onDrawEnd(e);
+              setDraggable(true);
+              console.log('drawEnd');
             } else {
               console.log(4);
             }
@@ -94,10 +101,28 @@ const Canvas = ({
         >
           <ShapesContext.Provider value={value}>
             <Layer>
+              {images.map((shape) => (
+                <TransformableImage
+                  {...shape}
+                  draggable={draggable}
+                  key={shape.id}
+                  src={shape.image}
+                  maxWidth={width * 0.9}
+                  isSelected={selected === shape.id}
+                  onDragStart={(e) => onDragStart(e, shape)}
+                  onDragEnd={(e) => onDragEnd(e)}
+                  onClick={() => setSelected(shape.id)}
+                  onTransform={(updated) => updateShape({
+                    ...updated,
+                    id: shape.id,
+                  })}
+                />
+              ))}
               {circles.map((shape) => (
                 <TransformableCircle
-                  key={shape.id}
                   {...shape}
+                  draggable={draggable}
+                  key={shape.id}
                   radiusX={shape.radiusX}
                   radiusY={shape.radiusY}
                   isSelected={selected === shape.id}
@@ -112,8 +137,9 @@ const Canvas = ({
               ))}
               {rectangles.map((shape) => (
                 <TransformableRect
-                  key={shape.id}
                   {...shape}
+                  draggable={draggable}
+                  key={shape.id}
                   isSelected={selected === shape.id}
                   onDragStart={(e) => onDragStart(e, shape)}
                   onDragEnd={(e) => onDragEnd(e)}
@@ -126,9 +152,10 @@ const Canvas = ({
               ))}
               {texts.map((shape) => (
                 <EditableText
+                  {...shape}
+                  draggable={draggable}
                   key={shape.id!}
                   text={shape.text}
-                  {...shape}
                   stage={stage.current}
                   isSelected={selected === shape.id}
                   onDragStart={(e) => onDragStart(e, shape)}
@@ -146,10 +173,11 @@ const Canvas = ({
                 mode,
               }).map((shape) => (
                 <TransformableLine
+                  {...shape}
+                  draggable={draggable}
                   key={shape.id!}
                   mode={shape.mode}
                   points={shape.points}
-                  {...shape}
                   isSelected={selected === shape.id}
                   onDragStart={(e) => onDragStart(e, shape)}
                   onDragEnd={(e) => onDragEnd(e)}

@@ -1,47 +1,52 @@
-import React, { useRef, useEffect } from 'react';
-import { Ellipse, Transformer } from 'react-konva';
+import React, { useRef, useEffect, useState } from 'react';
+import { Image, Transformer } from 'react-konva';
 import { Portal } from 'react-konva-utils';
 import Konva from 'konva';
+import useImage from 'use-image';
 
-export const TransformableCircle = ({
+export const TransformableImage = ({
   onDragStart,
   onDragEnd,
   onClick,
   onTransform,
   isSelected,
+  maxWidth,
+  src,
   ...props
 }: {
-    onDragStart: (shape: Konva.ShapeConfig) => void;
-    onDragEnd: (e: any) => void;
-    onTransform: (e: any) => void;
-    onClick: (e: any) => void;
-    isSelected: boolean;
-    radiusX: number;
-    radiusY: number;
-    [key: string]: any;
+  onDragStart: (shape: Konva.ShapeConfig) => void;
+  onDragEnd: (e: any) => void;
+  onTransform: (e: any) => void;
+  onClick: (e: any) => void;
+  isSelected: boolean;
+  src: Konva.ImageConfig['image'];
+  maxWidth: number;
+  [key: string]: any;
 }) => {
-  const circleRef = useRef<Konva.Ellipse>();
+  const imageRef = useRef<Konva.Image>();
   const transformerRef = useRef<Konva.Transformer>();
+  const ratio = maxWidth / (src.width as number);
 
   useEffect(() => {
     if (isSelected) {
-      transformerRef.current.nodes([circleRef.current]);
+      transformerRef.current.nodes([imageRef.current]);
       transformerRef.current.getLayer().batchDraw();
     }
   }, [isSelected]);
 
-  const snaps = Array(24).fill(0).map((_, i) => i * 15);
-
   return (
     <>
-      <Ellipse
-        ref={circleRef}
+      <Image
         {...props}
+        image={src}
+        ref={imageRef}
         onClick={onClick}
         onDragStart={onDragStart}
         onDragEnd={(e) => onDragEnd(e)}
-        onTransformEnd={(e) => {
-          const node = circleRef.current;
+        // width={(src.width as number) * ratio}
+        // height={(src.height as number) * ratio}
+        onTransformEnd={() => {
+          const node = imageRef.current;
           const scaleX = node.scaleX();
           const scaleY = node.scaleY();
           node.scaleX(1);
@@ -52,8 +57,8 @@ export const TransformableCircle = ({
             rotation: node.rotation(),
             x: node.x(),
             y: node.y(),
-            radiusX: (node.width() * scaleX) / 2,
-            radiusY: (node.height() * scaleY) / 2,
+            width: (node.width() * scaleX),
+            height: (node.height() * scaleY),
           });
         }}
       />
@@ -62,9 +67,6 @@ export const TransformableCircle = ({
         <Portal selector=".top-layer" enabled={isSelected}>
           <Transformer
             ref={transformerRef}
-            // TODO: 키 리스닝하게 하기
-            rotationSnaps={snaps}
-            rotationSnapTolerance={15 / 2}
           />
         </Portal>
       )}
