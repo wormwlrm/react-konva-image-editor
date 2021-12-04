@@ -1,12 +1,7 @@
-import { useState } from 'react';
+import { v4 as uuid } from 'uuid';
 
 export function useIdCounter() {
-  const [idCounter, setIdCounter] = useState(1);
-
   return {
-    generateId: () => {
-      setIdCounter(idCounter + 1);
-      return `${idCounter}`;
-    },
+    generateId: () => uuid(),
   };
 }
