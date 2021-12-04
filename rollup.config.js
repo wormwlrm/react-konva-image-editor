@@ -10,6 +10,7 @@ import serve from 'rollup-plugin-serve';
 import replace from '@rollup/plugin-replace';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import alias from '@rollup/plugin-alias';
+import image from '@rollup/plugin-image';
 
 const extensions = ['.js', '.jsx', '.ts', '.tsx'];
 
@@ -27,6 +28,8 @@ export default {
 
   plugins: [
     peerDepsExternal(),
+
+    image(),
 
     // json 파일 로드
     json(),

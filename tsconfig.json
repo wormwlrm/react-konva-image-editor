@@ -21,6 +21,10 @@
         "@types"
       ]
     },
+    "typeRoots": [
+      "node_modules/@types",
+      "src"
+    ]
   },
   "include": [
     "src/**/*.ts",
