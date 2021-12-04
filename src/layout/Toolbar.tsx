@@ -1,9 +1,9 @@
-import Konva from 'konva';
 import React, { useContext } from 'react';
 
+import Circle from '@/assets/circle.png';
 import { HistoryContext } from '@/context';
 import { ShapesContext } from '@/context/ShapesContext';
-import { DropImage } from '@/components';
+import { DropImage, ToolbarButton } from '@/components';
 import { useFilter } from '@/hooks';
 
 export const Toolbar = () => {
@@ -35,15 +35,15 @@ export const Toolbar = () => {
   return (
     <>
       <div>
-        <h1>Toolbar</h1>
-        <button
-          type="button"
+        <ToolbarButton
           onClick={() => handleAddShape({
             type: 'ellipse',
           })}
+          icon={Circle}
         >
           Add Circle
-        </button>
+        </ToolbarButton>
+
         <button
           type="button"
           onClick={() => handleAddShape({
@@ -160,28 +160,32 @@ export const Toolbar = () => {
         {selectedShape
         && (
         <>
-          <label htmlFor="shadowBlur">Shadow Blur</label>
-          <input
-            type="range"
-            name="shadowBlur"
-            value={selectedShape.shadowBlur}
-            min="0"
-            max="100"
-            step="1"
-            onMouseUp={applyFilter({ type: 'shadowBlur' })}
-            onChange={previewFilter({ type: 'shadowBlur' })}
-          />
-          <label htmlFor="brightness">brightness</label>
-          <input
-            type="range"
-            name="brightness"
-            min="-1"
-            max="1"
-            step="0.01"
-            value={selectedShape.brightness}
-            onMouseUp={applyFilter({ type: 'brightness' })}
-            onChange={previewFilter({ type: 'brightness' })}
-          />
+          <label htmlFor="shadowBlur">
+            Shadow Blur
+            <input
+              type="range"
+              name="shadowBlur"
+              value={selectedShape.shadowBlur}
+              min="0"
+              max="100"
+              step="1"
+              onMouseUp={applyFilter({ type: 'shadowBlur' })}
+              onChange={previewFilter({ type: 'shadowBlur' })}
+            />
+          </label>
+          <label htmlFor="brightness">
+            brightness
+            <input
+              type="range"
+              name="brightness"
+              min="-1"
+              max="1"
+              step="0.01"
+              value={selectedShape.brightness}
+              onMouseUp={applyFilter({ type: 'brightness' })}
+              onChange={previewFilter({ type: 'brightness' })}
+            />
+          </label>
         </>
         )}
       </div>

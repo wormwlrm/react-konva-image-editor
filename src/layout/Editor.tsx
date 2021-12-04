@@ -30,7 +30,6 @@ export const Editor = ({
       style={{
         width: responsive ? '100%' : size.width,
         height: responsive ? width * aspectRatio : size.height,
-        backgroundColor: '#ebebeb',
       }}
     >
       <HistoryProvider>
@@ -38,15 +37,17 @@ export const Editor = ({
           <Toolbar />
           <div
             style={{
-              width: `${size.width - 22}px`,
-              height: `${size.height - 22}px`,
-              lineHeight: `${size.height - 22}px`,
+              width: `${size.width}px`,
+              height: `${size.height}px`,
+              lineHeight: `${size.height}px`,
               overflow: 'auto',
-              margin: '10px',
-              border: '1px solid grey',
-              backgroundColor: 'lightgrey',
               textAlign: 'center',
               boxSizing: 'border-box',
+              boxShadow: 'rgb(0 0 0 / 50%) 0px 0px 18px -6px inset',
+              backgroundColor: '#ffffff',
+              backgroundImage: 'repeating-linear-gradient(45deg, #E3E3E3 25%, transparent 25%, transparent 75%, #E3E3E3 75%, #E3E3E3), repeating-linear-gradient(45deg, #E3E3E3 25%, #ffffff 25%, #ffffff 75%, #E3E3E3 75%, #E3E3E3)',
+              backgroundPosition: '0 0, 9px 9px',
+              backgroundSize: '18px 18px',
             }}
           >
             <Canvas width={size.width} height={size.height} />
