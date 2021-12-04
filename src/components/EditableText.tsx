@@ -98,9 +98,9 @@ const EditableText = ({
     }
   }, [isSelected]);
 
-  useEffect(() => {
-    shapeRef.current.cache();
-  }, [isSelected, props]);
+  // useEffect(() => {
+  //   shapeRef.current.cache();
+  // }, []); 글씨에는 필터 하면 안되겠다.
 
   useEffect(() => {
     // 최초 렌더링
@@ -298,6 +298,7 @@ const EditableText = ({
             x: node.x(),
             y: node.y(),
             width: node.width() * scaleX,
+            height: node.height() * scaleY,
           });
         }}
       />
