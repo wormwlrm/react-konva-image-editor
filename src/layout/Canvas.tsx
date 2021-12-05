@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { Stage, Layer, Line } from 'react-konva';
+import { Stage, Layer } from 'react-konva';
 import Konva from 'konva';
 
 import {
@@ -21,6 +21,9 @@ const Canvas = ({
     width: WindowSize['width'];
     height: WindowSize['height'];
 }) => {
+  const stageRef = useRef<Konva.Stage>();
+  const layerRef = useRef<Konva.Layer>();
+
   const {
     setSelected,
     onDragStart,
@@ -31,7 +34,6 @@ const Canvas = ({
 
     selected,
     unfocus,
-    setFocused,
     zoom,
     willDrawing,
     drawing,
@@ -44,16 +46,27 @@ const Canvas = ({
 
     draggable,
     setDraggable,
+    stage,
+    setStage,
+    layer,
+    setLayer,
   } = useShapesContext();
 
-  const stage = useRef<Konva.Stage>();
+  useEffect(() => {
+    if (stageRef.current && !stage) {
+      setStage(stageRef.current);
+    }
+    if (layerRef.current && !layer) {
+      setLayer(layerRef.current);
+    }
+  }, [stageRef, layerRef]);
 
   return (
     <ShapesConsumer>
       {(value) => (
         // TODO: 키보드 이벤트 리스닝하게 하기
         <Stage
-          ref={stage}
+          ref={stageRef}
           // TODO: 캔버스 크기를 이미지 기반으로 조절 가능하게
           width={width * zoom}
           height={height * zoom}
@@ -61,9 +74,7 @@ const Canvas = ({
             if (willDrawing) {
               setDraggable(false);
               onDrawStart(e);
-              console.log('willDraw');
             } else {
-              console.log('NotwillDraw');
               unselect(e);
               unfocus(e);
             }
@@ -79,9 +90,6 @@ const Canvas = ({
             if (drawing) {
               onDrawEnd(e);
               setDraggable(true);
-              console.log('drawEnd');
-            } else {
-              console.log(4);
             }
           }}
           scaleX={zoom}
@@ -96,7 +104,7 @@ const Canvas = ({
 
         >
           <ShapesContext.Provider value={value}>
-            <Layer>
+            <Layer ref={layerRef}>
               {shapes.map((shape) => {
                 switch (shape.type) {
                   case 'rectangle':
@@ -177,7 +185,7 @@ const Canvas = ({
                         id={shape.id}
                         key={shape.id}
                         text={shape.text}
-                        stage={stage.current}
+                        stage={stageRef.current}
                         isSelected={selected === shape.id}
                         onDragStart={(e) => onDragStart(e, shape)}
                         onDragEnd={(e) => onDragEnd(e)}

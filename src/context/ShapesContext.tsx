@@ -2,7 +2,7 @@ import React, { createContext, ReactNode } from 'react';
 import Konva from 'konva';
 
 import {
-  useDraggable, useShapes, useFocusable, useZoom, useDrawing
+  useDraggable, useShapes, useFocusable, useZoom, useDrawing, useStage
 } from '@/hooks';
 
 interface IShapesContext {
@@ -33,8 +33,6 @@ interface IShapesContext {
   zoomIn: (e?) => void;
   zoomOut: (e?) => void;
 
-  // setModeToEraser: () => void;
-  // setModeToPen: () => void;
   drawing: boolean;
   mode: string;
   setDrawing: (drawing: boolean) => void;
@@ -44,6 +42,11 @@ interface IShapesContext {
   onDrawEnd: (e: Konva.KonvaEventObject<MouseEvent>) => void;
   onDrawing: (e: Konva.KonvaEventObject<MouseEvent>) => void;
   points: Konva.LineConfig['points'];
+
+  stage: Konva.Stage;
+  setStage: (stage: Konva.Stage) => void;
+  layer: Konva.Layer;
+  setLayer: (layer: Konva.Layer) => void;
 }
 
 const defaultValue = {
@@ -82,6 +85,11 @@ const defaultValue = {
   onDrawing: () => {},
   onDrawEnd: () => {},
   points: [],
+
+  stage: {} as Konva.Stage,
+  setStage: () => {},
+  layer: {} as Konva.Layer,
+  setLayer: () => {},
 };
 
 const ShapesContext = createContext<IShapesContext>(defaultValue);
@@ -105,6 +113,10 @@ const ShapesProvider = ({ children }: {
   const {
     zoom, canZoomIn, canZoomOut, zoomIn, zoomOut,
   } = useZoom();
+
+  const {
+    stage, setStage, layer, setLayer,
+  } = useStage();
 
   const {
     // setModeToEraser, setModeToPen,
@@ -140,8 +152,6 @@ const ShapesProvider = ({ children }: {
     zoomIn,
     zoomOut,
 
-    // setModeToEraser,
-    // setModeToPen,
     setDrawing,
     drawing,
     mode,
@@ -151,6 +161,11 @@ const ShapesProvider = ({ children }: {
     onDrawEnd,
     onDrawStart,
     onDrawing,
+
+    stage,
+    setStage,
+    layer,
+    setLayer,
   };
 
   return (
