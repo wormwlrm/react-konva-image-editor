@@ -246,6 +246,10 @@ const EditableText = ({
   };
 
   useEffect(() => {
+    if (!textareaRef.current) {
+      return;
+    }
+
     setDivProps({
       style: {
         ...divProps.style,

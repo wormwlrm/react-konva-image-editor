@@ -1,13 +1,17 @@
-import React, { ReactNode, useCallback } from 'react';
-import { useDropzone } from 'react-dropzone';
+import React, { useCallback } from 'react';
+import { styled } from '@mui/material/styles';
 
-export function DropImage(props: {
-  children: ReactNode,
+const Input = styled('input')({
+  display: 'none',
+});
+
+export function ImageHandler(props: {
   onBase64ImageLoaded: (image: HTMLImageElement) => void,
 }) {
-  const { children, onBase64ImageLoaded } = props;
+  const { onBase64ImageLoaded } = props;
 
-  const onDrop = useCallback((acceptedFiles) => {
+  const handleFileChange = useCallback((event) => {
+    const [file] = event.target.files;
     const reader = new FileReader();
 
     reader.onabort = () => console.log('file reading was aborted');
@@ -21,14 +25,15 @@ export function DropImage(props: {
       image.onload = () => onBase64ImageLoaded(image);
     };
 
-    acceptedFiles.forEach((file) => reader.readAsDataURL(file));
+    reader.readAsDataURL(file);
   }, [props]);
 
-  const { getRootProps, getInputProps } = useDropzone({ onDrop });
   return (
-    <div {...getRootProps()}>
-      <input {...getInputProps()} />
-      {children}
-    </div>
+    <Input
+      type="file"
+      onChange={handleFileChange}
+      id="add-image"
+      accept="image/*"
+    />
   );
 }

@@ -23,12 +23,12 @@
     },
     "typeRoots": [
       "node_modules/@types",
-      "src"
+      "@types"
     ]
   },
   "include": [
     "src/**/*.ts",
-    "src/**/*.tsx",
+    "src/**/*.tsx", "@types/modules.d.ts",
   ],
   "exclude": [
     "node_modules"
