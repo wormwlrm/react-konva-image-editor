@@ -209,6 +209,7 @@ const Canvas = ({
                   onDragEnd={() => {}}
                   onClick={() => {}}
                   onTransform={() => {}}
+                  stroke="#637EF7"
                 />
               )
                 : null}

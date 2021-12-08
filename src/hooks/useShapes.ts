@@ -47,15 +47,24 @@ export function useShapes() {
     return updated;
   };
 
-  const addShape = <T extends Konva.ShapeConfig>(shape: T) => {
+  const generateShape = <T extends Konva.ShapeConfig>(shape: T) => {
+    if ('filters' in shape) {
+      // eslint-disable-next-line no-param-reassign
+      delete shape.filters;
+    }
+
+    console.log('generateShape');
+
+    const defaultColor = '#637EF7';
     let created: Konva.ShapeConfig = {
-      id: generateId(),
+      id: shape.id ?? generateId(),
       draggable: true,
       shadowBlur: 0,
       brightness: 0,
       blur: 0,
       contrast: 0,
       pixelSize: 1,
+      fill: defaultColor,
       filters: [
         Konva.Filters.Blur,
         ...(shape.type !== 'text' && [
@@ -67,52 +76,56 @@ export function useShapes() {
     };
 
     switch (shape.type) {
+      case 'circle':
       case 'ellipse':
         created = {
           ...created,
-          y: Math.random() * 100,
-          x: Math.random() * 100,
-          rotation: 0,
-          radiusX: 50,
-          radiusY: 50,
-          fill: '#637EF7',
-          type: 'ellipse',
           ...shape,
+          type: 'ellipse',
+          y: shape.y ?? Math.random() * 100,
+          x: shape.x ?? Math.random() * 100,
+          rotation: shape.rotation ?? 0,
+          radiusX: shape.radiusX ?? 50,
+          radiusY: shape.radiusY ?? 50,
+          fill: shape.fill ?? defaultColor,
         };
         break;
 
+      case 'rectangle':
       case 'rect':
         created = {
           ...created,
-          y: Math.random() * 100,
-          x: Math.random() * 100,
-          width: 50,
-          height: 50,
-          fill: '#637EF7',
+          ...shape,
           type: 'rectangle',
+          y: shape.y ?? Math.random() * 100,
+          x: shape.x ?? Math.random() * 100,
+          width: shape.width ?? 50,
+          height: shape.height ?? 50,
+          fill: shape.fill ?? '#637EF7',
         };
         break;
 
       case 'text':
         created = {
           ...created,
-          y: Math.random() * 100,
-          x: Math.random() * 100,
-          rotation: 0,
-          fill: '#637EF7',
-          type: 'text',
-          text: 'Double click to edit',
-          fontSize: 28,
-          fontStyle: 'normal',
-          align: 'left',
-          wrap: 'word',
           ...shape,
+          type: 'text',
+          rotation: shape.rotation ?? 0,
+          y: shape.y ?? Math.random() * 100,
+          x: shape.x ?? Math.random() * 100,
+          fill: shape.fill ?? '#637EF7',
+          text: shape.text ?? 'Double click to edit',
+          fontSize: shape.fontSize ?? 28,
+          fontStyle: shape.fontStyle ?? 'normal',
+          align: shape.align ?? 'left',
+          wrap: shape.wrap ?? 'word',
         };
         break;
 
       case 'line':
         created = {
           ...created,
+          stroke: shape.stroke ?? '#637EF7',
           ...shape,
         };
         break;
@@ -120,9 +133,10 @@ export function useShapes() {
       case 'image':
         created = {
           ...created,
-          y: Math.random() * 100,
-          x: Math.random() * 100,
           ...shape,
+          y: shape.x ?? Math.random() * 100,
+          x: shape.y ?? Math.random() * 100,
+          fill: undefined,
         };
         break;
 
@@ -130,9 +144,17 @@ export function useShapes() {
         break;
     }
 
-    console.log('setShape');
+    return created;
+  };
+
+  const addShape = <T extends Konva.ShapeConfig>(shape: T | T[]) => {
+    const created = ((Array.isArray(shape)) ? shape : [shape]).map((option) =>
+      generateShape(option));
+
+    console.log(shapes.concat(created));
 
     setShapes(shapes.concat(created));
+
     saveHistory(shapes.concat(created));
 
     return created;

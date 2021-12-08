@@ -16,7 +16,8 @@ interface IShapesContext {
     config: T & { id: string; },
     options?: { saveHistory: boolean }
   ) => Konva.ShapeConfig[];
-  addShape: (config: Konva.ShapeConfig) => Konva.ShapeConfig;
+  addShape: <T extends Konva.ShapeConfig>(shape: T | T[])
+    => Konva.ShapeConfig[];
   duplicateShape: (id: string) => Konva.ShapeConfig;
   removeShape: (id: string) => void;
   onDragStart: (e, shape: Konva.ShapeConfig) => void;
@@ -56,7 +57,7 @@ const defaultValue = {
   selected: null,
   focused: null,
   updateShape: () => [],
-  addShape: () => { return { x: 0, y: 0 }; },
+  addShape: () => [{ x: 0, y: 0 }],
   removeShape: () => {},
   duplicateShape: () => { return { x: 0, y: 0 }; },
   onDragStart: () => { },

@@ -47,7 +47,7 @@ export const useDrawing = ({ addShape, setSelected }) => {
 
   const onDrawEnd = (e: Konva.KonvaEventObject<DragEvent>) => {
     setDrawing(false);
-    const shape = addShape({
+    const [shape] = addShape({
       type: 'line',
       mode,
       points,

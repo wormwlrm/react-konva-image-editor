@@ -45,7 +45,6 @@ export const TransformableLine = ({
         onDragStart={onDragStart}
         onDragEnd={(e) => onDragEnd(e)}
         points={points}
-        stroke="#df4b26"
         strokeWidth={5}
         tension={0.5}
         lineCap="round"

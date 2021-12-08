@@ -48,22 +48,38 @@ export const Panel = ({
               }}
             />
           </label>
-          {selectedShape && (
-          <label htmlFor="fill">
-            color
-            <Input
-              fullWidth
-              type="color"
-              name="fill"
-              value={selectedShape.fill}
-              onBlur={(e) => {
-                applyFilter({ type: 'fill' })(e.target.value);
-              }}
-              onChange={(e) => {
-                previewFilter({ type: 'fill' })(e.target.value);
-              }}
-            />
-          </label>
+          {selectedShape.type === 'line' ? (
+            <label htmlFor="stroke">
+              color
+              <Input
+                fullWidth
+                type="color"
+                name="stroke"
+                value={selectedShape.stroke}
+                onBlur={(e) => {
+                  applyFilter({ type: 'stroke' })(e.target.value);
+                }}
+                onChange={(e) => {
+                  previewFilter({ type: 'stroke' })(e.target.value);
+                }}
+              />
+            </label>
+          ) : selectedShape.type !== 'image' && (
+            <label htmlFor="fill">
+              color
+              <Input
+                fullWidth
+                type="color"
+                name="fill"
+                value={selectedShape.fill}
+                onBlur={(e) => {
+                  applyFilter({ type: 'fill' })(e.target.value);
+                }}
+                onChange={(e) => {
+                  previewFilter({ type: 'fill' })(e.target.value);
+                }}
+              />
+            </label>
           )}
           {selectedShape.filters.find((filter) => filter.name === 'Brightness')
             && (

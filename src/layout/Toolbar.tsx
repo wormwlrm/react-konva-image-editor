@@ -17,10 +17,14 @@ import RectangleOutlinedIcon from '@mui/icons-material/RectangleOutlined';
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import LogoutIcon from '@mui/icons-material/Logout';
+import LoginIcon from '@mui/icons-material/Login';
+import Konva from 'konva';
 
 import { HistoryContext } from '@/context';
 import { useShapesContext } from '@/hooks';
 import { ImageHandler } from '@/components';
+import { JsonHandler } from '@/components/JsonHandler';
 
 const ToolbarBackground = styled('div')({
   backgroundColor: '#2c2c2c',
@@ -64,7 +68,7 @@ TooltipButton.defaultProps = {
 
 export const Toolbar = () => {
   const {
-    redo, undo, canRedo, canUndo,
+    redo, undo, canRedo, canUndo, saveHistory,
   } = useContext(HistoryContext);
 
   const {
@@ -78,7 +82,7 @@ export const Toolbar = () => {
   } = useShapesContext();
 
   const handleAddShape = (configs: {[key: string]: any}) => {
-    const shape = addShape({ ...configs });
+    const [shape] = addShape<Konva.ShapeConfig>({ ...configs });
     setSelected(shape.id);
   };
 
@@ -107,6 +111,15 @@ export const Toolbar = () => {
       },
     },
   });
+
+  const serialize = () => {
+    const serialized = layer.toJSON();
+    const blob = new Blob([
+      JSON.stringify(serialized),
+    ], { type: 'application/json' });
+
+    downloadURI(URL.createObjectURL(blob), 'image.json');
+  };
 
   return (
     <>
@@ -281,6 +294,28 @@ export const Toolbar = () => {
               >
                 <DownloadIcon />
               </TooltipButton>
+              <TooltipButton
+                title="Serialize"
+                onClick={() => {
+                  serialize();
+                }}
+              >
+                <LogoutIcon />
+              </TooltipButton>
+
+              <label htmlFor="deserialize">
+                <JsonHandler
+                  jsonLoaded={(shapeArr) => {
+                    addShape(shapeArr);
+                  }}
+                />
+                <TooltipButton
+                  title="Deserialize"
+                  component="span"
+                >
+                  <LoginIcon />
+                </TooltipButton>
+              </label>
             </ButtonGroup>
           </Stack>
         </ToolbarBackground>
