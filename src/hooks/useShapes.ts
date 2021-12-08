@@ -54,7 +54,16 @@ export function useShapes() {
       shadowBlur: 0,
       brightness: 0,
       blur: 0,
-      filters: [Konva.Filters.Blur, Konva.Filters.Brighten],
+      contrast: 0,
+      pixelSize: 1,
+      filters: [
+        Konva.Filters.Blur,
+        ...(shape.type !== 'text' && [
+          Konva.Filters.Brighten,
+          Konva.Filters.Contrast,
+          Konva.Filters.Pixelate,
+        ]),
+      ],
     };
 
     switch (shape.type) {
@@ -137,23 +146,53 @@ export function useShapes() {
   const toForward = (id: string) => {
     const shape = shapes.find((item) => item.id === id);
     if (!shape) return;
-    setShapes(shapes.filter((item) => item.id !== id).concat([shape]));
+    const result = shapes.filter((item) => item.id !== id).concat([shape]);
+    setShapes(result);
+    saveHistory(result);
   };
 
   const toBackward = (id: string) => {
     const shape = shapes.find((item) => item.id === id);
     if (!shape) return;
-    setShapes([shape].concat(shapes.filter((item) => item.id !== id)));
+    const result = [shape].concat(shapes.filter((item) => item.id !== id));
+    setShapes(result);
+    saveHistory(result);
+  };
+
+  const removeShape = (id: string) => {
+    const shape = shapes.find((item) => item.id === id);
+    if (!shape) return;
+    const result = shapes.filter((item) => item.id !== id);
+    setShapes(result);
+    saveHistory(result);
+  };
+
+  const duplicateShape = (id: string): Konva.ShapeConfig => {
+    const shape = shapes.find((item) => item.id === id);
+    const created = {
+      ...shape,
+      id: generateId(),
+      x: shape.x + 10,
+      y: shape.y + 10,
+    };
+
+    const result = shapes.concat([created]);
+    setShapes(result);
+    saveHistory(result);
+
+    return created;
   };
 
   return {
     shapes,
 
     getShapeById,
+    duplicateShape,
 
     setShapes,
     updateShape,
     addShape,
+    removeShape,
 
     toForward,
     toBackward,

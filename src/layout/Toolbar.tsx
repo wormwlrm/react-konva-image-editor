@@ -1,6 +1,8 @@
 import React, { useContext } from 'react';
-import { Button, ButtonGroup } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import {
+  Button, ButtonGroup, ThemeProvider, styled, createTheme, Stack, Divider,
+  Tooltip
+} from '@mui/material';
 import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 import FlipToFrontIcon from '@mui/icons-material/FlipToFront';
 import FlipToBackIcon from '@mui/icons-material/FlipToBack';
@@ -13,6 +15,8 @@ import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import RectangleOutlinedIcon from '@mui/icons-material/RectangleOutlined';
 import DownloadIcon from '@mui/icons-material/Download';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 import { HistoryContext } from '@/context';
 import { useShapesContext } from '@/hooks';
@@ -24,6 +28,39 @@ const ToolbarBackground = styled('div')({
   padding: '5px',
   display: 'flex',
 });
+
+const TooltipButton = ({
+  title,
+  disabled,
+  onClick,
+  children,
+  ...props
+}: {
+  title: string;
+  disabled?: boolean;
+  onClick?: (e) => void;
+  children: React.ReactNode;
+  [key: string]: any;
+}) => (
+  <Tooltip title={title}>
+    <span>
+      <Button
+        size="small"
+        type="button"
+        disabled={disabled}
+        onClick={onClick}
+        {...props}
+      >
+        {children}
+      </Button>
+    </span>
+  </Tooltip>
+);
+
+TooltipButton.defaultProps = {
+  disabled: false,
+  onClick: () => {},
+};
 
 export const Toolbar = () => {
   const {
@@ -37,7 +74,7 @@ export const Toolbar = () => {
     canZoomIn, canZoomOut,
     toForward, toBackward,
     setWillDrawing, willDrawing, drawing,
-    layer,
+    layer, removeShape, duplicateShape,
   } = useShapesContext();
 
   const handleAddShape = (configs: {[key: string]: any}) => {
@@ -59,138 +96,196 @@ export const Toolbar = () => {
     downloadURI(base64, 'image.png');
   };
 
+  const darkTheme = createTheme({
+    palette: {
+      mode: 'dark',
+      primary: {
+        main: '#E5E5E5',
+      },
+      secondary: {
+        main: '#f50057',
+      },
+    },
+  });
+
   return (
     <>
-      <ToolbarBackground>
-        <ButtonGroup variant="contained" size="small">
-          <Button
-            size="small"
-            onClick={() => handleAddShape({
-              type: 'ellipse',
-            })}
+      <ThemeProvider theme={darkTheme}>
+        <ToolbarBackground>
+          <Stack
+            direction="row"
+            divider={<Divider orientation="vertical" flexItem />}
+            spacing={1}
           >
-            <CircleOutlinedIcon />
-          </Button>
-          <Button
-            size="small"
-            onClick={() => handleAddShape({
-              type: 'rect',
-            })}
-          >
-            <RectangleOutlinedIcon />
-          </Button>
-          <Button
-            size="small"
-            onClick={() => handleAddShape({
-              type: 'text',
-            })}
-          >
-            <TextFieldsOutlinedIcon />
-          </Button>
+            <ButtonGroup variant="contained" size="small">
+              <TooltipButton
+                title="Circle"
+                onClick={() => handleAddShape({
+                  type: 'ellipse',
+                })}
+              >
+                <CircleOutlinedIcon />
+              </TooltipButton>
 
-          <Button
-            size="small"
-            disabled={willDrawing || drawing}
-            onClick={() => {
-              unselect();
-              unfocus();
-              setWillDrawing(true);
-            }}
-          >
-            <CreateIcon />
-          </Button>
-            &nbsp;
+              <TooltipButton
+                title="Rectangle"
+                onClick={() => handleAddShape({
+                  type: 'rect',
+                })}
+              >
+                <RectangleOutlinedIcon />
+              </TooltipButton>
 
-          <label htmlFor="add-image">
-            <ImageHandler
-              onBase64ImageLoaded={(image) => {
-                handleAddShape({
-                  type: 'image',
-                  image,
-                });
-              }}
-            />
-            <Button variant="contained" component="span" size="small">
-              <AddAPhotoIcon />
-            </Button>
-          </label>
-        </ButtonGroup>
-          &nbsp;
-        <ButtonGroup variant="contained" size="small">
-          <Button
-            disabled={!canUndo}
-            onClick={() => {
-              unselect();
-              unfocus();
-              undo();
-            }}
-          >
-            <UndoIcon />
-          </Button>
-          <Button
-            type="button"
-            disabled={!canRedo}
-            onClick={() => {
-              unselect();
-              unfocus();
-              redo();
-            }}
-          >
-            <RedoIcon />
-          </Button>
-        </ButtonGroup>
-          &nbsp;
+              <TooltipButton
+                title="Text Fields"
+                onClick={() => handleAddShape({
+                  type: 'text',
+                })}
+              >
+                <TextFieldsOutlinedIcon />
+              </TooltipButton>
 
-        <ButtonGroup variant="contained" size="small">
-          <Button
-            type="button"
-            disabled={!canZoomIn}
-            onClick={() => {
-              zoomIn();
-            }}
-          >
-            <ZoomInIcon />
-          </Button>
-          <Button
-            type="button"
-            disabled={!canZoomOut}
-            onClick={() => {
-              zoomOut();
-            }}
-          >
-            <ZoomOutIcon />
-          </Button>
-        </ButtonGroup>
-          &nbsp;
+              <TooltipButton
+                title="Drawing"
+                disabled={willDrawing || drawing}
+                onClick={() => {
+                  unselect();
+                  unfocus();
+                  setWillDrawing(true);
+                }}
+              >
+                <CreateIcon />
+              </TooltipButton>
 
-        <ButtonGroup variant="contained" size="small">
-          <Button
-            disabled={!selected}
-            onClick={() => {
-              toForward(selected);
-            }}
-          >
-            <FlipToFrontIcon />
-          </Button>
-          <Button
-            disabled={!selected}
-            onClick={() => {
-              toBackward(selected);
-            }}
-          >
-            <FlipToBackIcon />
-          </Button>
-        </ButtonGroup>
-        <ButtonGroup variant="contained" size="small">
-          <Button
-            onClick={() => {
-              downloadImage();
-            }}
-          >
-            <DownloadIcon />
-          </Button>
-        </ButtonGroup>
-      </ToolbarBackground>
+              &nbsp;
+
+              <label htmlFor="add-image">
+                <ImageHandler
+                  onBase64ImageLoaded={(image) => {
+                    handleAddShape({
+                      type: 'image',
+                      image,
+                    });
+                  }}
+                />
+                <TooltipButton
+                  title="Image"
+                  component="span"
+                >
+                  <AddAPhotoIcon />
+                </TooltipButton>
+              </label>
+            </ButtonGroup>
+
+            <ButtonGroup variant="contained" size="small">
+              <TooltipButton
+                title="Undo"
+                disabled={!canUndo}
+                onClick={() => {
+                  unselect();
+                  unfocus();
+                  undo();
+                }}
+              >
+                <UndoIcon />
+              </TooltipButton>
+
+              <TooltipButton
+                title="Redo"
+                disabled={!canRedo}
+                onClick={() => {
+                  unselect();
+                  unfocus();
+                  redo();
+                }}
+              >
+                <RedoIcon />
+              </TooltipButton>
+            </ButtonGroup>
+
+            <ButtonGroup variant="contained" size="small">
+              <TooltipButton
+                title="Zoom In"
+                type="button"
+                disabled={!canZoomIn}
+                onClick={() => {
+                  zoomIn();
+                }}
+              >
+                <ZoomInIcon />
+              </TooltipButton>
+
+              <TooltipButton
+                title="Zoom Out"
+                type="button"
+                disabled={!canZoomOut}
+                onClick={() => {
+                  zoomOut();
+                }}
+              >
+                <ZoomOutIcon />
+              </TooltipButton>
+            </ButtonGroup>
+
+            <ButtonGroup variant="contained" size="small">
+              <TooltipButton
+                title="Delete"
+                disabled={!selected}
+                onClick={() => {
+                  removeShape(selected);
+                  unselect();
+                  unfocus();
+                }}
+              >
+                <DeleteForeverIcon />
+              </TooltipButton>
+
+              <TooltipButton
+                title="Duplicate"
+                disabled={!selected}
+                onClick={() => {
+                  const shape = duplicateShape(selected);
+                  setSelected(shape.id);
+                }}
+              >
+                <ContentCopyIcon />
+              </TooltipButton>
+
+              <TooltipButton
+                title="To Forward"
+                disabled={!selected}
+                onClick={() => {
+                  toForward(selected);
+                }}
+              >
+                <FlipToFrontIcon />
+              </TooltipButton>
+
+              <TooltipButton
+                title="To Backward"
+                disabled={!selected}
+                onClick={() => {
+                  toBackward(selected);
+                }}
+              >
+                <FlipToBackIcon />
+              </TooltipButton>
+            </ButtonGroup>
+
+            <ButtonGroup variant="contained" size="small">
+              <TooltipButton
+                title="Download"
+                onClick={() => {
+                  downloadImage();
+                }}
+              >
+                <DownloadIcon />
+              </TooltipButton>
+            </ButtonGroup>
+          </Stack>
+        </ToolbarBackground>
+      </ThemeProvider>
+
     </>
   );
 };

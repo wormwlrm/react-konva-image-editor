@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react';
 export const useFilter = ({ selected, updateShape }) => {
   const previewFilter = ({
     type,
-  }) => (e) => {
-    const value = Number((e.target as HTMLInputElement).value);
+  }) => (value) => {
     updateShape({
       id: selected,
       [type]: value,
@@ -16,8 +15,7 @@ export const useFilter = ({ selected, updateShape }) => {
 
   const applyFilter = ({
     type,
-  }) => (e) => {
-    const value = Number((e.target as HTMLInputElement).value);
+  }) => (value) => {
     updateShape({
       id: selected,
       [type]: value,

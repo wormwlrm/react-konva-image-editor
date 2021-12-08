@@ -17,6 +17,8 @@ interface IShapesContext {
     options?: { saveHistory: boolean }
   ) => Konva.ShapeConfig[];
   addShape: (config: Konva.ShapeConfig) => Konva.ShapeConfig;
+  duplicateShape: (id: string) => Konva.ShapeConfig;
+  removeShape: (id: string) => void;
   onDragStart: (e, shape: Konva.ShapeConfig) => void;
   onDragEnd: (e: Konva.KonvaEventObject<DragEvent>) => void;
   unselect: (e?) => void;
@@ -55,6 +57,8 @@ const defaultValue = {
   focused: null,
   updateShape: () => [],
   addShape: () => { return { x: 0, y: 0 }; },
+  removeShape: () => {},
+  duplicateShape: () => { return { x: 0, y: 0 }; },
   onDragStart: () => { },
   onDragEnd: () => { },
   unselect: () => { },
@@ -98,7 +102,8 @@ const ShapesProvider = ({ children }: {
   children: ReactNode,
 }) => {
   const {
-    shapes, updateShape, addShape, toForward, toBackward, getShapeById,
+    shapes, updateShape, addShape,
+    removeShape, duplicateShape, toForward, toBackward, getShapeById,
   } = useShapes();
 
   const {
@@ -134,6 +139,8 @@ const ShapesProvider = ({ children }: {
     setFocused,
     updateShape,
     addShape,
+    removeShape,
+    duplicateShape,
     onDragStart,
     onDragEnd,
     draggable,

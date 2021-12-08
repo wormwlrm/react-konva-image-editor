@@ -1,5 +1,6 @@
 import React from 'react';
-import { Slider } from '@mui/material';
+import { Input, Slider } from '@mui/material';
+import { amber } from '@mui/material/colors';
 
 import { useFilter, useShapesContext } from '@/hooks';
 
@@ -10,6 +11,9 @@ export const Panel = ({
   canvasSize: { width: number; height: number };
   setCanvasSize: (size: { width: number; height: number }) => void;
 }) => {
+  const minValue = 0;
+  const maxValue = 5000;
+
   const { selected } = useShapesContext();
 
   const { getShapeById, updateShape } = useShapesContext();
@@ -18,8 +22,12 @@ export const Panel = ({
 
   const { applyFilter, previewFilter } = useFilter({ selected, updateShape });
 
-  const filterNumber = (value) =>
-    parseInt(value.replace(/[^0-9]/g, ''), 10) || 0;
+  const filterNumber = (value) => {
+    let filtered = (parseInt(value.replace(/[^0-9]/g, ''), 10) || 0);
+    filtered = Math.max(minValue, filtered);
+    filtered = Math.min(maxValue, filtered);
+    return filtered;
+  };
 
   return (
     <div>
@@ -33,57 +41,108 @@ export const Panel = ({
               min={0}
               max={100}
               step={1}
-              onMouseUp={applyFilter({ type: 'shadowBlur' })}
-              onChange={previewFilter({ type: 'shadowBlur' })}
+              onChangeCommitted={(_e, value) => {
+                applyFilter({ type: 'shadowBlur' })(value);
+              }}
+              onChange={(_e, value) => {
+                previewFilter({ type: 'shadowBlur' })(value);
+              }}
             />
           </label>
-          {selectedShape.type !== 'text' && (
+          {selectedShape.filters.find((filter) => filter.name === 'Brightness')
+            && (
             <label htmlFor="brightness">
               brightness
-              <input
-                type="range"
+              <Slider
                 name="brightness"
-                min="-1"
-                max="1"
-                step="0.01"
                 value={selectedShape.brightness}
-                onMouseUp={applyFilter({ type: 'brightness' })}
-                onChange={previewFilter({ type: 'brightness' })}
+                min={-1}
+                max={1}
+                step={0.01}
+                onChangeCommitted={(_e, value) => {
+                  applyFilter({ type: 'brightness' })(value);
+                }}
+                onChange={(_e, value) => {
+                  previewFilter({ type: 'brightness' })(value);
+                }}
               />
             </label>
-          )}
-
+            )}
+          {selectedShape.filters.find((filter) => filter.name === 'Contrast')
+            && (
+            <label htmlFor="contrast">
+              contrast
+              <Slider
+                name="contrast"
+                value={selectedShape.contrast}
+                min={-100}
+                max={100}
+                step={1}
+                onChangeCommitted={(_e, value) => {
+                  applyFilter({ type: 'contrast' })(value);
+                }}
+                onChange={(_e, value) => {
+                  previewFilter({ type: 'contrast' })(value);
+                }}
+              />
+            </label>
+            )}
+          {selectedShape.filters.find((filter) => filter.name === 'Pixelate')
+            && (
+            <label htmlFor="pixelSize">
+              pixelSize
+              <Slider
+                name="pixelSize"
+                value={selectedShape.pixelSize}
+                min={0}
+                max={20}
+                step={1}
+                onChangeCommitted={(_e, value) => {
+                  applyFilter({ type: 'pixelSize' })(value);
+                }}
+                onChange={(_e, value) => {
+                  previewFilter({ type: 'pixelSize' })(value);
+                }}
+              />
+            </label>
+            )}
         </>
       ) : (
         <>
           <label htmlFor="canvasWidth">
             canvas width
-            <input
+            <Input
+              fullWidth
               type="number"
-              min="10"
               name="canvasWidth"
+              inputProps={{
+                min: minValue,
+                max: maxValue,
+              }}
               value={canvasSize.width}
               onChange={(e) => {
-                const width = filterNumber(e.target.value);
                 setCanvasSize({
                   ...canvasSize,
-                  width,
+                  width: filterNumber(e.target.value),
                 });
               }}
             />
           </label>
           <label htmlFor="canvasHeight">
             canvas height
-            <input
+            <Input
+              fullWidth
               type="number"
+              inputProps={{
+                min: minValue,
+                max: maxValue,
+              }}
               name="canvasHeight"
-              min="10"
               value={canvasSize.height}
               onChange={(e) => {
-                const height = filterNumber(e.target.value);
                 setCanvasSize({
                   ...canvasSize,
-                  height,
+                  height: filterNumber(e.target.value),
                 });
               }}
             />
