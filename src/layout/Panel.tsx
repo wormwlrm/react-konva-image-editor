@@ -1,6 +1,5 @@
 import React from 'react';
 import { Input, Slider } from '@mui/material';
-import { amber } from '@mui/material/colors';
 
 import { useFilter, useShapesContext } from '@/hooks';
 
@@ -49,6 +48,23 @@ export const Panel = ({
               }}
             />
           </label>
+          {selectedShape && (
+          <label htmlFor="fill">
+            color
+            <Input
+              fullWidth
+              type="color"
+              name="fill"
+              value={selectedShape.fill}
+              onBlur={(e) => {
+                applyFilter({ type: 'fill' })(e.target.value);
+              }}
+              onChange={(e) => {
+                previewFilter({ type: 'fill' })(e.target.value);
+              }}
+            />
+          </label>
+          )}
           {selectedShape.filters.find((filter) => filter.name === 'Brightness')
             && (
             <label htmlFor="brightness">
