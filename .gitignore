@@ -1,7 +1,6 @@
 .DS_Store
 node_modules
 /MEMO.md
-lib
 
 /tests/e2e/videos/
 /tests/e2e/screenshots/

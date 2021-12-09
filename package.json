@@ -1,10 +1,15 @@
 {
   "name": "react-konva-image-editor",
-  "version": "0.0.1",
-  "description": "🖼 Image Editor based on React.js & Konva.js",
-  "main": "lib/bundle.js",
+  "version": "0.0.2",
+  "description": "🖼 HTML5 Canvas API Image Editor based on React.js & Konva.js",
+  "main": "lib/bundle.min.js",
   "files": [
     "lib"
+  ],
+  "keywords": [
+    "react",
+    "react-konva",
+    "react-konva-image-editor"
   ],
   "scripts": {
     "build": "NODE_ENV=production rollup -c",
@@ -68,6 +73,7 @@
     "konva": "^8.2.2",
     "react-konva": "^17.0.2-5",
     "react-konva-utils": "^0.2.0",
+    "rollup-plugin-terser": "^7.0.2",
     "use-image": "^1.0.8",
     "uuid": "^8.3.2"
   }
