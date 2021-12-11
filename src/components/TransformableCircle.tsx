@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { Ellipse, Transformer } from 'react-konva';
 import { Portal } from 'react-konva-utils';
 import Konva from 'konva';
