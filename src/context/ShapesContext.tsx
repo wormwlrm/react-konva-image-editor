@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode } from 'react';
+import React, { createContext, ReactNode, useContext } from 'react';
 import Konva from 'konva';
 
 import {
@@ -189,4 +189,15 @@ const ShapesConsumer = ({ children }: { children: (value) => ReactNode }) => (
   </ShapesContext.Consumer>
 );
 
-export { ShapesContext, ShapesProvider, ShapesConsumer };
+const useShapesContext = () => {
+  const context = useContext(ShapesContext);
+
+  return context;
+};
+
+export {
+  ShapesContext,
+  ShapesProvider,
+  ShapesConsumer,
+  useShapesContext
+};

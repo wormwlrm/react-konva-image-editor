@@ -10,9 +10,9 @@ import {
   TransformableRect
 } from '@/components';
 import {
-  useShapesContext, WindowSize
+  WindowSize
 } from '@/hooks';
-import { ShapesConsumer, ShapesContext, ShapesProvider } from '@/context';
+import { ShapesConsumer, ShapesContext, useShapesContext } from '@/context';
 import { TransformableImage } from '@/components/TransformableImage';
 
 const Canvas = ({

@@ -1,7 +1,8 @@
 import React from 'react';
 import { Input, Slider } from '@mui/material';
 
-import { useFilter, useShapesContext } from '@/hooks';
+import { useFilter } from '@/hooks';
+import { useShapesContext } from '@/context';
 
 export const Panel = ({
   canvasSize,
@@ -13,9 +14,7 @@ export const Panel = ({
   const minValue = 0;
   const maxValue = 5000;
 
-  const { selected } = useShapesContext();
-
-  const { getShapeById, updateShape } = useShapesContext();
+  const { selected, getShapeById, updateShape } = useShapesContext();
 
   const selectedShape = getShapeById(selected);
 

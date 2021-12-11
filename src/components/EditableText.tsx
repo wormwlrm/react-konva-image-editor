@@ -1,11 +1,12 @@
 import React, {
-  useRef, useEffect, useState, useContext
+  useRef, useEffect, useState
 } from 'react';
 import { Text, Transformer } from 'react-konva';
 import { Html, Portal } from 'react-konva-utils';
 import Konva from 'konva';
 
-import { useShapesContext, useTransformer } from '@/hooks';
+import { useTransformer } from '@/hooks';
+import { useShapesContext } from '@/context';
 
 const EditableText = ({
   onDragStart,

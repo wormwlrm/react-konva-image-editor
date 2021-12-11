@@ -21,8 +21,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import Konva from 'konva';
 
-import { HistoryContext } from '@/context';
-import { useShapesContext } from '@/hooks';
+import { HistoryContext, useShapesContext } from '@/context';
 import { ImageHandler } from '@/components';
 import { JsonHandler } from '@/components/JsonHandler';
 

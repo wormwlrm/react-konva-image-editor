@@ -5,7 +5,7 @@ import React, {
 
 import { useIdCounter } from './useIdCounter';
 
-import { HistoryContext } from '@/context';
+import { HistoryContext } from '@/context/HistoryContext';
 
 export function useShapes() {
   const [shapes, setShapes] = useState<Konva.ShapeConfig[]>([]);

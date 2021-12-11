@@ -27,6 +27,7 @@ export default {
     file: './lib/bundle.min.js',
     format: 'es',
     globals: { react: 'React', 'react-dom': 'ReactDOM' },
+    sourcemap: true,
     plugins: [
       terser(),
     ],
@@ -63,6 +64,7 @@ export default {
     // 노드 환경 변수 치환
     replace({
       'process.env.NODE_ENV': JSON.stringify('development'),
+      preventAssignment: true,
     }),
 
     // 바벨 트랜스파일러 설정
