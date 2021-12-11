@@ -3,6 +3,8 @@ import { Rect, Transformer } from 'react-konva';
 import { Portal } from 'react-konva-utils';
 import Konva from 'konva';
 
+import { useTransformer } from '@/hooks';
+
 export const TransformableRect = ({
   onDragStart,
   onDragEnd,
@@ -21,12 +23,11 @@ export const TransformableRect = ({
   const rectRef = useRef<Konva.Rect>();
   const transformerRef = useRef<Konva.Transformer>();
 
-  useEffect(() => {
-    if (isSelected) {
-      transformerRef.current.nodes([rectRef.current]);
-      transformerRef.current.getLayer().batchDraw();
-    }
-  }, [isSelected]);
+  useTransformer({
+    isSelected,
+    shape: rectRef,
+    transformer: transformerRef,
+  });
 
   useEffect(() => {
     rectRef.current.cache();

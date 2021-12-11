@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 
-export function useZoom() {
+export const useZoom = () => {
   const [zoom, setZoom] = useState(0.7);
 
   const maximum = 2.0;
@@ -27,4 +27,4 @@ export function useZoom() {
     canZoomIn,
     canZoomOut,
   };
-}
+};

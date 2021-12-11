@@ -5,7 +5,7 @@ import { Text, Transformer } from 'react-konva';
 import { Html, Portal } from 'react-konva-utils';
 import Konva from 'konva';
 
-import { useShapesContext } from '@/hooks';
+import { useShapesContext, useTransformer } from '@/hooks';
 
 const EditableText = ({
   onDragStart,
@@ -91,16 +91,11 @@ const EditableText = ({
     return newWidth;
   };
 
-  useEffect(() => {
-    if (isSelected) {
-      transformerRef.current.nodes([shapeRef.current]);
-      transformerRef.current.getLayer().batchDraw();
-    }
-  }, [isSelected]);
-
-  // useEffect(() => {
-  //   shapeRef.current.cache();
-  // }, []); 글씨에는 필터 하면 안되겠다.
+  useTransformer({
+    isSelected,
+    shape: shapeRef,
+    transformer: transformerRef,
+  });
 
   useEffect(() => {
     // 최초 렌더링

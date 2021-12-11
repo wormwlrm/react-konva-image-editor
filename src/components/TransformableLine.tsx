@@ -3,6 +3,8 @@ import { Line, Transformer } from 'react-konva';
 import { Portal } from 'react-konva-utils';
 import Konva from 'konva';
 
+import { useTransformer } from '@/hooks';
+
 export const TransformableLine = ({
   onDragStart,
   onDragEnd,
@@ -25,12 +27,11 @@ export const TransformableLine = ({
   const lineRef = useRef<Konva.Line>();
   const transformerRef = useRef<Konva.Transformer>();
 
-  useEffect(() => {
-    if (isSelected) {
-      transformerRef.current.nodes([lineRef.current]);
-      transformerRef.current.getLayer().batchDraw();
-    }
-  }, [isSelected]);
+  useTransformer({
+    isSelected,
+    shape: lineRef,
+    transformer: transformerRef,
+  });
 
   useEffect(() => {
     lineRef.current.cache();
