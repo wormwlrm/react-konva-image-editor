@@ -4,7 +4,7 @@ import { Portal } from 'react-konva-utils';
 import Konva from 'konva';
 import useImage from 'use-image';
 
-import { useTransformer } from '@/hooks';
+import { useShapeCache, useTransformer } from '@/hooks';
 
 export const TransformableImage = ({
   onDragStart,
@@ -30,13 +30,14 @@ export const TransformableImage = ({
 
   useTransformer({
     isSelected,
-    shape: imageRef,
+    ref: imageRef,
     transformer: transformerRef,
   });
 
-  useEffect(() => {
-    imageRef.current.cache();
-  }, [isSelected, props]);
+  useShapeCache({
+    ref: imageRef,
+    deps: [isSelected, props],
+  });
 
   return (
     <>

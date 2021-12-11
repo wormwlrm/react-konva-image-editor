@@ -3,7 +3,7 @@ import { Rect, Transformer } from 'react-konva';
 import { Portal } from 'react-konva-utils';
 import Konva from 'konva';
 
-import { useTransformer } from '@/hooks';
+import { useShapeCache, useTransformer } from '@/hooks';
 
 export const TransformableRect = ({
   onDragStart,
@@ -25,13 +25,14 @@ export const TransformableRect = ({
 
   useTransformer({
     isSelected,
-    shape: rectRef,
+    ref: rectRef,
     transformer: transformerRef,
   });
 
-  useEffect(() => {
-    rectRef.current.cache();
-  }, [isSelected, props]);
+  useShapeCache({
+    ref: rectRef,
+    deps: [isSelected, props],
+  });
 
   return (
     <>

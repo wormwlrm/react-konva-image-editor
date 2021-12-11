@@ -3,7 +3,7 @@ import { Ellipse, Transformer } from 'react-konva';
 import { Portal } from 'react-konva-utils';
 import Konva from 'konva';
 
-import { useTransformer } from '@/hooks';
+import { useShapeCache, useTransformer } from '@/hooks';
 
 export const TransformableCircle = ({
   onDragStart,
@@ -27,13 +27,14 @@ export const TransformableCircle = ({
 
   useTransformer({
     isSelected,
-    shape: circleRef,
+    ref: circleRef,
     transformer: transformerRef,
   });
 
-  useEffect(() => {
-    circleRef.current.cache();
-  }, [isSelected, props]);
+  useShapeCache({
+    ref: circleRef,
+    deps: [isSelected, props],
+  });
 
   const snaps = Array(24).fill(0).map((_, i) => i * 15);
 

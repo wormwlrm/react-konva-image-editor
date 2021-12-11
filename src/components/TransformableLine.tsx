@@ -3,7 +3,7 @@ import { Line, Transformer } from 'react-konva';
 import { Portal } from 'react-konva-utils';
 import Konva from 'konva';
 
-import { useTransformer } from '@/hooks';
+import { useShapeCache, useTransformer } from '@/hooks';
 
 export const TransformableLine = ({
   onDragStart,
@@ -29,13 +29,14 @@ export const TransformableLine = ({
 
   useTransformer({
     isSelected,
-    shape: lineRef,
+    ref: lineRef,
     transformer: transformerRef,
   });
 
-  useEffect(() => {
-    lineRef.current.cache();
-  }, [isSelected, props]);
+  useShapeCache({
+    ref: lineRef,
+    deps: [isSelected, props],
+  });
 
   return (
     <>

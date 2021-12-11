@@ -36,8 +36,8 @@ export const Editor = ({
       className="react-konva-image-editor"
       ref={wrapperRef}
       style={{
-        width: responsive ? '100%' : size.width,
-        height: responsive ? width * aspectRatio : size.height,
+        width: responsive ? '100%' : `${size.width}px`,
+        height: responsive ? 'auto' : `${width * aspectRatio}px`,
       }}
     >
       <HistoryProvider>
@@ -74,6 +74,7 @@ export const Editor = ({
               boxShadow: 'rgb(0 0 0 / 50%) 0px 0px 18px -6px',
               zIndex: 0,
               padding: '16px',
+              backgroundColor: 'white',
             }}
             >
               <Panel

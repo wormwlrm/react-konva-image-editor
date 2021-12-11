@@ -9,4 +9,5 @@ export * from './useShapesContext';
 export * from './useDrawing';
 export * from './useStage';
 export * from './useTransformer';
+export * from './useShapeCache';
 export * from './useFilter';

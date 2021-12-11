@@ -93,7 +93,7 @@ const EditableText = ({
 
   useTransformer({
     isSelected,
-    shape: shapeRef,
+    ref: shapeRef,
     transformer: transformerRef,
   });
 
