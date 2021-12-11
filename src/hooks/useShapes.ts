@@ -1,12 +1,11 @@
 import Konva from 'konva';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { EllipseConfig } from 'konva/lib/shapes/Ellipse';
-import { RectConfig } from 'konva/lib/shapes/Rect';
-import { TextConfig } from 'konva/lib/shapes/Text';
+import React, {
+  useContext, useEffect, useState
+} from 'react';
 
 import { useIdCounter } from './useIdCounter';
 
-import { HistoryContext } from '@/context';
+import { HistoryContext } from '@/context/HistoryContext';
 
 export function useShapes() {
   const [shapes, setShapes] = useState<Konva.ShapeConfig[]>([]);
@@ -19,8 +18,15 @@ export function useShapes() {
     index: historyIndex,
   } = useContext(HistoryContext);
 
+  const getShapeById = (id: string) => shapes.find((shape) => shape.id === id);
+
   const updateShape = <T extends Konva.ShapeConfig>(
-    config: T & { id: string }
+    config: T & { id: string },
+    options: {
+      saveHistory: boolean;
+    } = {
+      saveHistory: true,
+    }
   ) => {
     const updated = shapes.map((shape) => {
       if (shape.id === config.id) {
@@ -32,61 +38,105 @@ export function useShapes() {
       return shape;
     });
 
-    console.log('updateShape');
-
     setShapes(updated);
-    saveHistory(updated);
+
+    if (options.saveHistory) {
+      saveHistory(updated);
+    }
 
     return updated;
   };
 
-  const addShape = <T extends Konva.ShapeConfig>(shape: T) => {
+  const generateShape = <T extends Konva.ShapeConfig>(shape: T) => {
+    if ('filters' in shape) {
+      // eslint-disable-next-line no-param-reassign
+      delete shape.filters;
+    }
+
+    console.log('generateShape');
+
+    const defaultColor = '#637EF7';
     let created: Konva.ShapeConfig = {
-      id: generateId(),
+      id: shape.id ?? generateId(),
       draggable: true,
+      shadowBlur: 0,
+      brightness: 0,
+      blur: 0,
+      contrast: 0,
+      pixelSize: 1,
+      fill: defaultColor,
+      filters: [
+        Konva.Filters.Blur,
+        ...(shape.type !== 'text' && [
+          Konva.Filters.Brighten,
+          Konva.Filters.Contrast,
+          Konva.Filters.Pixelate,
+        ]),
+      ],
     };
 
     switch (shape.type) {
+      case 'circle':
       case 'ellipse':
         created = {
           ...created,
-          y: Math.random() * 100,
-          x: Math.random() * 100,
-          rotation: 0,
-          radiusX: 50,
-          radiusY: 50,
-          fill: '#637EF7',
-          type: 'ellipse',
           ...shape,
+          type: 'ellipse',
+          y: shape.y ?? Math.random() * 100,
+          x: shape.x ?? Math.random() * 100,
+          rotation: shape.rotation ?? 0,
+          radiusX: shape.radiusX ?? 50,
+          radiusY: shape.radiusY ?? 50,
+          fill: shape.fill ?? defaultColor,
         };
         break;
 
+      case 'rectangle':
       case 'rect':
         created = {
           ...created,
-          y: Math.random() * 100,
-          x: Math.random() * 100,
-          width: 50,
-          height: 50,
-          fill: '#637EF7',
+          ...shape,
           type: 'rectangle',
+          y: shape.y ?? Math.random() * 100,
+          x: shape.x ?? Math.random() * 100,
+          width: shape.width ?? 50,
+          height: shape.height ?? 50,
+          fill: shape.fill ?? '#637EF7',
         };
         break;
 
       case 'text':
         created = {
           ...created,
-          y: Math.random() * 100,
-          x: Math.random() * 100,
-          rotation: 0,
-          fill: '#637EF7',
-          type: 'text',
-          text: 'Double click to edit',
-          fontSize: 28,
-          fontStyle: 'normal',
-          align: 'left',
-          wrap: 'word',
           ...shape,
+          type: 'text',
+          rotation: shape.rotation ?? 0,
+          y: shape.y ?? Math.random() * 100,
+          x: shape.x ?? Math.random() * 100,
+          fill: shape.fill ?? '#637EF7',
+          text: shape.text ?? 'Double click to edit',
+          fontSize: shape.fontSize ?? 28,
+          fontStyle: shape.fontStyle ?? 'normal',
+          align: shape.align ?? 'left',
+          wrap: shape.wrap ?? 'word',
+        };
+        break;
+
+      case 'line':
+        created = {
+          ...created,
+          stroke: shape.stroke ?? '#637EF7',
+          ...shape,
+        };
+        break;
+
+      case 'image':
+        created = {
+          ...created,
+          ...shape,
+          y: shape.x ?? Math.random() * 100,
+          x: shape.y ?? Math.random() * 100,
+          fill: undefined,
         };
         break;
 
@@ -94,9 +144,17 @@ export function useShapes() {
         break;
     }
 
-    console.log('setShape');
+    return created;
+  };
+
+  const addShape = <T extends Konva.ShapeConfig>(shape: T | T[]) => {
+    const created = ((Array.isArray(shape)) ? shape : [shape]).map((option) =>
+      generateShape(option));
+
+    console.log(shapes.concat(created));
 
     setShapes(shapes.concat(created));
+
     saveHistory(shapes.concat(created));
 
     return created;
@@ -107,38 +165,58 @@ export function useShapes() {
     setShapes(history[historyIndex]);
   }, [historyIndex]);
 
-  const circles: (EllipseConfig & { id: string })[] = useMemo(
-    () =>
-      shapes.filter((shape) => shape.type === 'ellipse') as (EllipseConfig & {
-        id: string;
-      })[],
-    [shapes]
-  );
+  const toForward = (id: string) => {
+    const shape = shapes.find((item) => item.id === id);
+    if (!shape) return;
+    const result = shapes.filter((item) => item.id !== id).concat([shape]);
+    setShapes(result);
+    saveHistory(result);
+  };
 
-  const rectangles: (RectConfig & { id: string })[] = useMemo(
-    () =>
-      shapes.filter((shape) => shape.type === 'rectangle') as (RectConfig & {
-        id: string;
-      })[],
-    [shapes]
-  );
+  const toBackward = (id: string) => {
+    const shape = shapes.find((item) => item.id === id);
+    if (!shape) return;
+    const result = [shape].concat(shapes.filter((item) => item.id !== id));
+    setShapes(result);
+    saveHistory(result);
+  };
 
-  const texts: (TextConfig & { id: string })[] = useMemo(
-    () =>
-      shapes.filter((shape) => shape.type === 'text') as (TextConfig & {
-        id: string;
-      })[],
-    [shapes]
-  );
+  const removeShape = (id: string) => {
+    const shape = shapes.find((item) => item.id === id);
+    if (!shape) return;
+    const result = shapes.filter((item) => item.id !== id);
+    setShapes(result);
+    saveHistory(result);
+  };
+
+  const duplicateShape = (id: string): Konva.ShapeConfig => {
+    const shape = shapes.find((item) => item.id === id);
+    const created = {
+      ...shape,
+      id: generateId(),
+      x: shape.x + 10,
+      y: shape.y + 10,
+    };
+
+    const result = shapes.concat([created]);
+    setShapes(result);
+    saveHistory(result);
+
+    return created;
+  };
 
   return {
     shapes,
-    circles,
-    rectangles,
-    texts,
+
+    getShapeById,
+    duplicateShape,
 
     setShapes,
     updateShape,
     addShape,
+    removeShape,
+
+    toForward,
+    toBackward,
   };
 }

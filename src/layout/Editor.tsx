@@ -1,8 +1,9 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { InitialSetting } from '@types';
 
 import { Toolbar } from './Toolbar';
 import { Canvas } from './Canvas';
+import { Panel } from './Panel';
 
 import { HistoryProvider, ShapesProvider } from '@/context';
 import { useResizer, WindowSize } from '@/hooks';
@@ -23,33 +24,68 @@ export const Editor = ({
     aspectRatio,
   });
 
-  return (
+  const [canvasSize, setCanvasSize] = useState({
+    width: size.width,
+    height: size.height,
+  });
 
+  console.log(canvasSize);
+
+  return (
     <div
       className="react-konva-image-editor"
       ref={wrapperRef}
       style={{
-        width: responsive ? '100%' : size.width,
-        height: responsive ? width * aspectRatio : size.height,
-        backgroundColor: '#ebebeb',
+        width: responsive ? '100%' : `${size.width}px`,
+        height: responsive ? 'auto' : `${width * aspectRatio}px`,
       }}
     >
       <HistoryProvider>
         <ShapesProvider>
           <Toolbar />
-          <div
-            style={{
-              width: `calc(${size.width - 22}px)`,
-              height: `calc(${size.height - 22}px)`,
-              overflow: 'auto',
-              margin: '10px',
-              border: '1px solid grey',
-            }}
+          <div style={{
+            display: 'flex',
+            overflow: 'hidden',
+          }}
           >
-            <Canvas width={size.width} height={size.height} />
+            <div
+              style={{
+                width: `${size.width - 240}px`,
+                height: `${size.height - 43}px`,
+                lineHeight: `${size.height}px`,
+                overflow: 'auto',
+                textAlign: 'center',
+                boxSizing: 'border-box',
+                boxShadow: 'rgb(0 0 0 / 50%) 0px 0px 18px -6px inset',
+                backgroundColor: '#ffffff',
+                // eslint-disable-next-line max-len
+                backgroundImage: 'repeating-linear-gradient(45deg, #E3E3E3 25%, transparent 25%, transparent 75%, #E3E3E3 75%, #E3E3E3), repeating-linear-gradient(45deg, #E3E3E3 25%, #ffffff 25%, #ffffff 75%, #E3E3E3 75%, #E3E3E3)',
+                backgroundPosition: '0 0, 9px 9px',
+                backgroundSize: '18px 18px',
+              }}
+            >
+              <Canvas
+                width={canvasSize.width}
+                height={canvasSize.height}
+              />
+            </div>
+            <div style={{
+              flex: 1,
+              boxShadow: 'rgb(0 0 0 / 50%) 0px 0px 18px -6px',
+              zIndex: 0,
+              padding: '16px',
+              backgroundColor: 'white',
+            }}
+            >
+              <Panel
+                canvasSize={canvasSize}
+                setCanvasSize={setCanvasSize}
+              />
+            </div>
           </div>
         </ShapesProvider>
       </HistoryProvider>
+
     </div>
   );
 };

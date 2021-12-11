@@ -1,11 +1,12 @@
 import React, {
-  useRef, useEffect, useState, useContext
+  useRef, useEffect, useState
 } from 'react';
 import { Text, Transformer } from 'react-konva';
 import { Html, Portal } from 'react-konva-utils';
 import Konva from 'konva';
 
-import { useShapesContext } from '@/hooks';
+import { useTransformer } from '@/hooks';
+import { useShapesContext } from '@/context';
 
 const EditableText = ({
   onDragStart,
@@ -44,6 +45,7 @@ const EditableText = ({
 
   const [textareaProps, setTextareaProps] = useState<any>({
     style: {
+      display: 'block',
       border: 'none',
       padding: '0px',
       margin: '0px',
@@ -90,12 +92,11 @@ const EditableText = ({
     return newWidth;
   };
 
-  useEffect(() => {
-    if (isSelected) {
-      transformerRef.current.nodes([shapeRef.current]);
-      transformerRef.current.getLayer().batchDraw();
-    }
-  }, [isSelected]);
+  useTransformer({
+    isSelected,
+    ref: shapeRef,
+    transformer: transformerRef,
+  });
 
   useEffect(() => {
     // 최초 렌더링
@@ -175,6 +176,8 @@ const EditableText = ({
       return transform;
     };
 
+    console.log(shapeRef.current.brightness());
+
     updatedDivProps.style = {
       ...divProps.style,
       width: `${shapeRef.current.width()
@@ -185,6 +188,7 @@ const EditableText = ({
       display: 'block',
       left: `${areaPosition.x}px`,
       top: `${areaPosition.y}px`,
+      filter: `brightness(${(shapeRef.current.brightness() + 1)})`,
     };
 
     updatedTextareaProps.style = {
@@ -204,7 +208,7 @@ const EditableText = ({
     textareaRef.current.focus();
   }
 
-  function removeTextarea() {
+  const removeTextarea = () => {
     setDivProps({
       ...divProps,
       style: {
@@ -212,7 +216,12 @@ const EditableText = ({
         display: 'none',
       },
     });
-  }
+  };
+
+  const onBlurHandler = () => {
+    removeTextarea();
+    unfocus();
+  };
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     textareaRef.current.style.height = 'auto';
@@ -233,6 +242,10 @@ const EditableText = ({
   };
 
   useEffect(() => {
+    if (!textareaRef.current) {
+      return;
+    }
+
     setDivProps({
       style: {
         ...divProps.style,
@@ -250,7 +263,6 @@ const EditableText = ({
         text={text}
         id={id}
         ref={shapeRef}
-        draggable
         onDblClick={(e) => {
           setFocused(id);
           handleTextDblClick(e);
@@ -286,6 +298,7 @@ const EditableText = ({
             x: node.x(),
             y: node.y(),
             width: node.width() * scaleX,
+            height: node.height() * scaleY,
           });
         }}
       />
@@ -310,6 +323,9 @@ const EditableText = ({
           value={textareaValue}
           style={textareaProps.style}
           onChange={onChangeHandler}
+          onBlur={() => {
+            onBlurHandler();
+          }}
           onKeyDown={(e) => {
             if (e.keyCode === 13 && !e.shiftKey) {
               // 값 다를 때만 저장
@@ -321,8 +337,7 @@ const EditableText = ({
                   width: getTextareaWidth(shapeRef.current.width()),
                 });
               }
-              removeTextarea();
-              unfocus();
+              onBlurHandler();
 
               // shapeRef.current.show();
               // 바깥 눌렀을 떄 Selected 해제애햐 앟
@@ -334,8 +349,8 @@ const EditableText = ({
                 ...textareaProps,
               });
               setTextareaValue(originValue);
-              removeTextarea();
-              unfocus();
+              onBlurHandler();
+
               shapeRef.current.show();
               // transformerRef.current.show();
             }

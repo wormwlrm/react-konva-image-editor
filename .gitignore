@@ -1,7 +1,8 @@
 .DS_Store
 node_modules
 /MEMO.md
-lib
+lib/bundle.js
+lib/bundle.js.map
 
 /tests/e2e/videos/
 /tests/e2e/screenshots/

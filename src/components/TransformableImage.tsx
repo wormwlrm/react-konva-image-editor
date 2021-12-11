@@ -1,49 +1,57 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Rect, Transformer } from 'react-konva';
+import { Image, Transformer } from 'react-konva';
 import { Portal } from 'react-konva-utils';
 import Konva from 'konva';
+import useImage from 'use-image';
 
 import { useShapeCache, useTransformer } from '@/hooks';
 
-export const TransformableRect = ({
+export const TransformableImage = ({
   onDragStart,
   onDragEnd,
   onClick,
   onTransform,
   isSelected,
+  maxWidth,
+  src,
   ...props
 }: {
-    onDragStart: (shape: Konva.ShapeConfig) => void;
-    onDragEnd: (e: any) => void;
-    onTransform: (e: any) => void;
-    onClick: (e: any) => void;
-    isSelected: boolean;
-    [key: string]: any;
+  onDragStart: (shape: Konva.ShapeConfig) => void;
+  onDragEnd: (e: any) => void;
+  onTransform: (e: any) => void;
+  onClick: (e: any) => void;
+  isSelected: boolean;
+  src: Konva.ImageConfig['image'];
+  maxWidth: number;
+  [key: string]: any;
 }) => {
-  const rectRef = useRef<Konva.Rect>();
+  const imageRef = useRef<Konva.Image>();
   const transformerRef = useRef<Konva.Transformer>();
 
   useTransformer({
     isSelected,
-    ref: rectRef,
+    ref: imageRef,
     transformer: transformerRef,
   });
 
   useShapeCache({
-    ref: rectRef,
+    ref: imageRef,
     deps: [isSelected, props],
   });
 
   return (
     <>
-      <Rect
-        onClick={onClick}
-        ref={rectRef}
+      <Image
         {...props}
+        image={src}
+        ref={imageRef}
+        onClick={onClick}
         onDragStart={onDragStart}
         onDragEnd={(e) => onDragEnd(e)}
+        // width={(src.width as number) * ratio}
+        // height={(src.height as number) * ratio}
         onTransformEnd={() => {
-          const node = rectRef.current;
+          const node = imageRef.current;
           const scaleX = node.scaleX();
           const scaleY = node.scaleY();
           node.scaleX(1);

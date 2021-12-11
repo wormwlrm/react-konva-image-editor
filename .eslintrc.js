@@ -45,5 +45,6 @@ module.exports = {
         objects: 'always-multiline',
       },
     ],
+    'jsx-a11y/label-has-associated-control': 'off',
   },
 };

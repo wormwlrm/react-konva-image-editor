@@ -1,14 +1,20 @@
 {
   "name": "react-konva-image-editor",
-  "version": "0.0.1",
-  "description": "🖼 Image Editor based on React.js & Konva.js",
+  "version": "0.0.5",
+  "description": "🖼 HTML5 Canvas API Image Editor based on React.js & Konva.js",
   "main": "lib/bundle.js",
   "files": [
     "lib"
   ],
+  "keywords": [
+    "react",
+    "react-konva",
+    "react-konva-image-editor"
+  ],
   "scripts": {
     "build": "NODE_ENV=production rollup -c",
-    "watch": "rollup -cw"
+    "watch": "rollup -cw",
+    "publish": "npm publish"
   },
   "repository": "git+https://github.com/wormwlrm/react-konva-image-editor.git",
   "author": "wormwlrm",
@@ -25,6 +31,7 @@
     "@rollup/plugin-alias": "^3.1.5",
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-commonjs": "^21.0.0",
+    "@rollup/plugin-image": "^2.1.1",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.0.5",
     "@rollup/plugin-replace": "^3.0.0",
@@ -60,8 +67,15 @@
     "react-dom": "^17.0.2"
   },
   "dependencies": {
+    "@emotion/react": "^11.7.0",
+    "@emotion/styled": "^11.6.0",
+    "@mui/icons-material": "^5.2.0",
+    "@mui/material": "^5.2.2",
     "konva": "^8.2.2",
     "react-konva": "^17.0.2-5",
-    "react-konva-utils": "^0.2.0"
+    "react-konva-utils": "^0.2.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "use-image": "^1.0.8",
+    "uuid": "^8.3.2"
   }
 }

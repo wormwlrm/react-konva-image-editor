@@ -1,7 +1,9 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { Ellipse, Transformer } from 'react-konva';
 import { Portal } from 'react-konva-utils';
 import Konva from 'konva';
+
+import { useShapeCache, useTransformer } from '@/hooks';
 
 export const TransformableCircle = ({
   onDragStart,
@@ -23,19 +25,24 @@ export const TransformableCircle = ({
   const circleRef = useRef<Konva.Ellipse>();
   const transformerRef = useRef<Konva.Transformer>();
 
-  useEffect(() => {
-    if (isSelected) {
-      transformerRef.current.nodes([circleRef.current]);
-      transformerRef.current.getLayer().batchDraw();
-    }
-  }, [isSelected]);
+  useTransformer({
+    isSelected,
+    ref: circleRef,
+    transformer: transformerRef,
+  });
+
+  useShapeCache({
+    ref: circleRef,
+    deps: [isSelected, props],
+  });
+
+  const snaps = Array(24).fill(0).map((_, i) => i * 15);
 
   return (
     <>
       <Ellipse
         ref={circleRef}
         {...props}
-        draggable
         onClick={onClick}
         onDragStart={onDragStart}
         onDragEnd={(e) => onDragEnd(e)}
@@ -61,6 +68,9 @@ export const TransformableCircle = ({
         <Portal selector=".top-layer" enabled={isSelected}>
           <Transformer
             ref={transformerRef}
+            // TODO: 키 리스닝하게 하기
+            rotationSnaps={snaps}
+            rotationSnapTolerance={15 / 2}
           />
         </Portal>
       )}

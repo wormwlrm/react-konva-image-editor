@@ -5,11 +5,11 @@ import resolve from '@rollup/plugin-node-resolve';
 import json from '@rollup/plugin-json';
 import typescript from 'rollup-plugin-typescript2';
 import babel from '@rollup/plugin-babel';
-import livereload from 'rollup-plugin-livereload';
-import serve from 'rollup-plugin-serve';
 import replace from '@rollup/plugin-replace';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import alias from '@rollup/plugin-alias';
+import image from '@rollup/plugin-image';
+// import { terser } from 'rollup-plugin-terser';
 
 const extensions = ['.js', '.jsx', '.ts', '.tsx'];
 
@@ -17,16 +17,23 @@ const rootDir = path.resolve(__dirname);
 
 export default {
   input: './src/index.ts',
-  output: {
+  output: [{
     file: './lib/bundle.js',
     format: 'es',
     sourcemap: true,
-    globals: { react: 'React', 'react-dom': 'ReactDOM' },
-  },
+    plugins: [
+      replace({
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+        preventAssignment: true,
+      }),
+    ],
+  }],
   external: ['react', 'react-dom'],
 
   plugins: [
     peerDepsExternal(),
+
+    image(),
 
     // json 파일 로드
     json(),
@@ -51,9 +58,6 @@ export default {
     }),
 
     // 노드 환경 변수 치환
-    replace({
-      'process.env.NODE_ENV': JSON.stringify('development'),
-    }),
 
     // 바벨 트랜스파일러 설정
     babel({
@@ -63,18 +67,6 @@ export default {
         '@babel/preset-react',
         '@babel/preset-typescript',
       ],
-    }),
-
-    // HRM
-    // livereload(),
-
-    // 개발 서버
-    serve({
-      verbose: true,
-      contentBase: ['', 'src', 'lib'],
-      historyApiFallback: true,
-      host: 'localhost',
-      port: 3000,
     }),
   ],
 };
