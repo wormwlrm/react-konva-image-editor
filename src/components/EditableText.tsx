@@ -199,6 +199,7 @@ const EditableText = ({
       textAlign: shapeRef.current.align(),
       color: shapeRef.current.fill(),
       transform: getTransform(),
+      height: updatedDivProps.style.height,
     };
 
     setDivProps(updatedDivProps);
@@ -225,9 +226,12 @@ const EditableText = ({
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     textareaRef.current.style.height = 'auto';
+
     textareaRef.current.style.height = `${
       textareaRef.current.scrollHeight + shapeRef.current.fontSize()
     }px`;
+
+    console.log(textareaRef.current.style.height);
 
     setDivProps({
       style: {
@@ -275,6 +279,7 @@ const EditableText = ({
           node.setAttrs({
             scaleX: 1,
             width: node.width() * node.scaleX(),
+            height: 'auto',
           });
         }}
         onKeyDown={(e) => {
@@ -284,11 +289,10 @@ const EditableText = ({
           }
         }}
         onTransformEnd={(e) => {
-          console.log('e :>> ', e);
-
           const node = shapeRef.current;
           const scaleX = node.scaleX();
-          const scaleY = node.scaleY();
+
+          // 텍스트는 height: auto를 따라야 하기 때문에 명시적으로 주면 안됨
           node.scaleX(1);
           node.scaleY(1);
 
@@ -298,7 +302,6 @@ const EditableText = ({
             x: node.x(),
             y: node.y(),
             width: node.width() * scaleX,
-            height: node.height() * scaleY,
           });
         }}
       />
@@ -329,7 +332,8 @@ const EditableText = ({
           onKeyDown={(e) => {
             if (e.keyCode === 13 && !e.shiftKey) {
               // 값 다를 때만 저장
-              console.log(originValue !== textareaValue);
+              console.log(originValue);
+              console.log(textareaValue);
               if (originValue !== textareaValue) {
                 onTransform({
                   id,
