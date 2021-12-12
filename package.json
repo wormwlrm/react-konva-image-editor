@@ -1,6 +1,6 @@
 {
   "name": "react-konva-image-editor",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "🖼 HTML5 Canvas API Image Editor based on React.js & Konva.js",
   "main": "lib/bundle.js",
   "files": [
