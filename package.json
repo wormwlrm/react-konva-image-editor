@@ -14,7 +14,8 @@
   "scripts": {
     "build": "NODE_ENV=production rollup -c",
     "watch": "rollup -cw",
-    "publish": "npm publish"
+    "publish": "npm publish",
+    "release": "sh release.sh"
   },
   "repository": "git+https://github.com/wormwlrm/react-konva-image-editor.git",
   "author": "wormwlrm",
