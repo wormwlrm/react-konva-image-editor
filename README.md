@@ -113,7 +113,7 @@ return (
 
 #### 이미지/도형 컴포넌트 생성 및 편집
 
-https://user-images.githubusercontent.com/26682772/145718038-42747719-298d-45d5-b2c9-b1be1c23239e.mov
+<https://user-images.githubusercontent.com/26682772/145718038-42747719-298d-45d5-b2c9-b1be1c23239e.mov>
 
 캔버스에 이미지와 도형 인스턴스를 생성할 수 있습니다. 각 도형은 드래그 가능하며(Draggable), 자체적으로 회전, 리사이징이 가능(Transformable)합니다.
 
@@ -123,7 +123,7 @@ https://user-images.githubusercontent.com/26682772/145718038-42747719-298d-45d5-
 
 #### 실행 취소/다시 실행
 
-https://user-images.githubusercontent.com/26682772/145718069-e9ac7410-0165-4cb1-9f92-7eb81fc3daf0.mov
+<https://user-images.githubusercontent.com/26682772/145718069-e9ac7410-0165-4cb1-9f92-7eb81fc3daf0.mov>
 
 실행 취소와 다시 실행 기능을 위해 메멘토 패턴을 적용했습니다. 메멘토 패턴은 히스토리를 저장하는 Caretaker 역할, 그리고 히스토리를 가리키는 인덱스를 띄워주는 Originator 역할으로 구성됩니다.
 
@@ -135,8 +135,7 @@ Shapes Layer는 현재 History Layer에서 가리키는 스냅샷을 가져옵�
 
 #### 드로잉
 
-https://user-images.githubusercontent.com/26682772/145718089-751a0abc-ee86-4511-80ab-1543f2a21473.mov
-
+<https://user-images.githubusercontent.com/26682772/145718089-751a0abc-ee86-4511-80ab-1543f2a21473.mov>
 
 드로잉은 기본적으로 드래그 앤 드롭과 동일한 입력을 받지만 다르게 동작해야 합니다. 따라서 툴바에서 드로잉 모드를 선택하게 되면, 캔버스에 있는 도형들은 더 이상 드래그 가능하지 않게 됩니다. 이는 도형 위에서 드로잉을 시작했을 때, 도형이 드래그 되는 현상을 막기 위해서입니다.
 
@@ -148,7 +147,7 @@ https://user-images.githubusercontent.com/26682772/145718089-751a0abc-ee86-4511-
 
 #### 수정 가능한 텍스트 컴포넌트 제공
 
-https://user-images.githubusercontent.com/26682772/145718104-01e7da02-e35f-49e8-8281-f1b8880ae069.mov
+<https://user-images.githubusercontent.com/26682772/145718104-01e7da02-e35f-49e8-8281-f1b8880ae069.mov>
 
 HTML5 스펙에 따르면, 캔버스에서 텍스트를 렌더할 수는 있지만 캔버스 내에서 입력값을 직접 수정할 수 있는 인풋(input) 형태로는 제공되지 않습니다. 따라서 해당 기능이 필요한 경우가 있다면 Canvas API를 적절히 우회하여야 합니다.
 
@@ -161,29 +160,39 @@ HTML5 스펙에 따르면, 캔버스에서 텍스트를 렌더할 수는 있지�
 
 #### 캔버스 확대 및 축소
 
-https://user-images.githubusercontent.com/26682772/145718305-dbe41202-d872-4d92-a5ea-47dfa597e871.mov
+<https://user-images.githubusercontent.com/26682772/145718305-dbe41202-d872-4d92-a5ea-47dfa597e871.mov>
 
-줌 배율을 지정하는 변수를 선언하고, 이를 캔버스 레이어에 적용하고 적절히 리사이징합니다. 
+줌 배율을 지정하는 변수를 선언하고, 이를 캔버스 레이어에 적용하고 적절히 리사이징합니다.
 
 이 때 기존의 도형 인스턴스 배치에 영향이 가지 않게 합니다.
 
-한편 캔버스 영역이 보여지는 화면보다 클 경우 스크롤 가능하게 만듭니다. 
+한편 캔버스 영역이 보여지는 화면보다 클 경우 스크롤 가능하게 만듭니다.
 
 #### Z-index 조정
 
-https://user-images.githubusercontent.com/26682772/145718128-7024a879-ed43-436a-a834-608cfa0cccbd.mov
+<https://user-images.githubusercontent.com/26682772/145718128-7024a879-ed43-436a-a834-608cfa0cccbd.mov>
 
 도형 간 z-index 조정은 Shape Layer의 도형 인스턴스 배열의 순서를 바꾸는 방식으로 구현 가능합니다.
 
 #### 이미지 저장 및 직렬화 기반 저장 및 복원 기능
 
-https://user-images.githubusercontent.com/26682772/145718140-2ecfcfc6-2a85-4e88-a688-b5feb4a2a89a.mov
+<https://user-images.githubusercontent.com/26682772/145718140-2ecfcfc6-2a85-4e88-a688-b5feb4a2a89a.mov>
 
 이미지 저장 기능은 현재 렌더된 화면을 이미지 파일로 저장할 수 있는 Canvas API의 `toDataURL()` 메서드를 사용하여 제공합니다.
 
 도형을 인스턴스화했기 때문에, 현재까지의 편집 내역이 담긴 Shape Layer의 도형 인스턴스 배열을 직렬화하여 JSON 파일로 저장할 수 있습니다.
 
 이후 JSON 파일을 불러올 때, Shape Layer 배열에 적절히 매칭시키는 기능까지 구현된 상태입니다.
+
+##### 활용 예시
+
+![활용](/images/example.jpeg)
+
+본 프로젝트는 현재까지의 캔버스에 그려진 도형 상태를 JSON 포맷으로 직렬화할 수 있고, 이를 파일로 다시 불러올 수 있다는 점에서 독창성이 있다. 이를 설명하기 위해, 관련 오픈소스인 [NHN Toast UI Image Editor](https://github.com/nhn/tui.image-editor)와 비교해 해당 기능을 설명한다.
+
+NHN의 Toast UI Image Editor는 결과물로 이미지 파일만 추출(export) 할 수 있다. 따라서 현재 캔버스가 그려져 있는 웹 브라우저를 닫게 되면 메모리에 올라가 있는 데이터들이 모두 사라지기 때문에, 해당 결과물을 다시 복구하거나 수정할 수 없다.
+
+한편 본 프로젝트에서는 데이터 직렬화 기능을 지원하기 때문에, 사용자의 현재 작업 내역을 JSON 파일로 저장할 수 있다. 따라서 해당 JSON 파일을 역직렬화하면서 작업 내역을 복구할 수 있다. 만약 JSON 파일을 다른 사용자에게 공유할 수 있다면, 동일한 작업 내역을 여러 사용자에게 제공할 수도 있다. 이 기능을 호스트 쪽 데이터베이스 등에 저장해둘 수 있다면 이 장점이 극대화된다. 사용자는 원격 서버에 본인의 작업 내역을 저장해두고 언제든 불러올 수 있기 때문이다.
 
 ## Conclusion & Limitations
 
@@ -222,6 +231,6 @@ https://user-images.githubusercontent.com/26682772/145718140-2ecfcfc6-2a85-4e88-
 
 _해당 논문은 2021 한국정보과학회 학부생 논문경진대회 본선 진출작입니다._
 
-- [ ] [최종보고서](reports/Final.pdf)
+- [x] [최종보고서](reports/CD1_6팀(최종보고서).docx)
 - [x] [한국정보과학회 논문](reports/HTML5_Canvas_기반_오픈소스_이미지_에디터_라이브러리_개발.pdf)
 - [x] [한국정보과학회 학부생경진대회 발표영상](reports/304_정종윤(경희대학교).mp4)
